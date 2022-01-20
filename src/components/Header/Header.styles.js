@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  background: var(--darkGrey);
+  background: var(--darkGray);
   padding: 0 20px;
 `;
 
@@ -15,17 +15,19 @@ export const Content = styled.div`
 `;
 
 export const LogoImg = styled.img`
-  width: 200px;
+  width: 300px;
+
   
   @media screen and (max-width: 700px) {
-    width: 100px;
+    width: 200px;
   };
 `;
 
-export const GreenImg = styled.img`
-  width: 100px;
+export const SpotifyImg = styled.img`
+  width: 300px;
+
   
   @media screen and (max-width: 700px) {
-    width: 80px;
+    width: 200px;
   }
 `;
