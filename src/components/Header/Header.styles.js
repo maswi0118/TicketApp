@@ -19,7 +19,7 @@ export const LogoImg = styled.img`
 
   
   @media screen and (max-width: 700px) {
-    width: 200px;
+    width: 130px;
   };
 `;
 
@@ -28,6 +28,6 @@ export const SpotifyImg = styled.img`
 
   
   @media screen and (max-width: 700px) {
-    width: 200px;
+    width: 130px;
   }
 `;
