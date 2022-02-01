@@ -3,6 +3,9 @@ import styled from 'styled-components';
 export const Wrapper = styled.div`
   background: var(--darkGray);
   padding: 0 20px;
+  position: fixed;
+  width: 100%;
+  z-index: 101;
 `;
 
 export const Content = styled.div`
@@ -18,16 +21,7 @@ export const LogoImg = styled.img`
   width: 300px;
 
   
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: 720px) {
     width: 130px;
   };
-`;
-
-export const SpotifyImg = styled.img`
-  width: 300px;
-
-  
-  @media screen and (max-width: 700px) {
-    width: 130px;
-  }
 `;

@@ -35,5 +35,21 @@ export const Text = styled.div`
   bottom: 40px;
   margin-right: 20px;
   min-height: 100px;
-  color: var(--darkGray);
+  color: darkgrey;
+  
+  h1 {
+    font-size: var(--fontSuperBig);
+    
+    @media screen and (max-width: 720px) {
+      font-size: var(--fontBig);
+    }
+  }
+  
+  p{
+    font-size: var(--fontMed);
+    
+    @media screen and (max-width: 720px) {
+      font-size: var(--fontSmall);
+    }
+  }
 `;

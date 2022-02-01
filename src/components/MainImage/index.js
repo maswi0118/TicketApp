@@ -6,6 +6,7 @@ const MainImage = ({image, title, text}) => (
     <Wrapper image={image}>
         <Content>
             <Text>
+                <div id='events'/>
                 <h1>{title}</h1>
                 <p>{text}</p>
             </Text>
