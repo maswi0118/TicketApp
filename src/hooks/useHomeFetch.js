@@ -30,7 +30,7 @@ export const useHomeFetch = () => {
     };
 
     useEffect(() => {
-        fetchArtists("love");
+        fetchArtists("kult");
     }, [])
 
     return { state, loading, error };

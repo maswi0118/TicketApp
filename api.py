@@ -48,4 +48,3 @@ def get_token():
             "grant_type": "client_credentials"
         })
     return res.json().get('access_token')
-
