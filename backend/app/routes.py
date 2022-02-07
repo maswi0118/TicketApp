@@ -2,7 +2,7 @@ import base64
 import os
 import requests
 from flask_cors import cross_origin
-from flask import render_template
+from flask import render_template, flash
 from . import app
 
 
@@ -48,10 +48,51 @@ def get_token():
         })
     return res.json().get('access_token')
 
-@app.route('/add_city')
+@app.route('/add_city', methods=['POST', 'GET'])
 def add_city():
     from .forms import AddCityForm
+    from .database import add_city as add
     form = AddCityForm()
     if form.validate_on_submit():
+        if add(form.city.data, form.province.data):
+            flash(f'Poprawnie dodano: {form.city.data}, {form.province.data}.')
+        else:
+            flash(f'Nie udało się dodać: {form.city.data}, {form.province.data}.')
+    return render_template('add_template.html', form=form)
 
+
+@app.route('/add_location', methods=['POST', 'GET'])
+def add_location():
+    from .forms import AddLocationForm
+    from .database import add_location as add
+    form = AddLocationForm()
+    if form.validate_on_submit():
+        if add(form.name.data, form.capacity.data, form.address.data, form.indoor.data, form.city.data):
+            flash(f'Poprawnie dodano: {form.name.data}, {form.address.data}.')
+        else:
+            flash(f'Nie udało się dodać {form.name.data}.')
+    return render_template('add_template.html', form=form)
+
+@app.route('/add_artist', methods=['POST', 'GET'])
+def add_artist():
+    from .forms import AddArtistForm
+    from .database import add_artist as add
+    form = AddArtistForm()
+    if form.validate_on_submit():
+        if add(form.name.data, form.genre.data, form.nationality.data, form.about.data):
+            flash(f'Poprawnie dodano: {form.name.data}, {form.nationality.data}.')
+        else:
+            flash(f'Nie udało się dodać {form.name.data}, {form.nationality.data}.')
+    return render_template('add_template.html', form=form)
+
+@app.route('/add_event', methods=['POST', 'GET'])
+def add_event():
+    from .forms import AddEventForm
+    from .database import add_event as add
+    form = AddEventForm()
+    if form.validate_on_submit():
+        if add(form.name.data, form.date.data, form.limit.data, form.location.data, form.artist.data):
+            flash(f'Poprawnie dodano wydarzenie {form.name.data}')
+        else:
+            flash(f'Nie udało dodać się wydarzenia {form.name.data}')
     return render_template('add_template.html', form=form)
