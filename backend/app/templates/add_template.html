@@ -1,15 +1,17 @@
 {% extends "base.html" %}
-
 {% import "bootstrap/wtf.html" as wtf %}
+
 {% block head %}
-<title>Battleship</title>
+<title>PójścieAPP - Admin</title>
 <meta charset="utf-8" />
 {% endblock %}
 
 {% block page_content %}
-<div class="container-fluid">
-  <div class="d-flex justify-content-center">
-    {{ wtf.quick_form(form) }}
+<main class="container">
+  <div class="row">
+    <div class="container-fluid">
+        {{ wtf.quick_form(form) }}
+    </div>
   </div>
-</div>
+</main>
 {% endblock %}
