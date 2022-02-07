@@ -5,6 +5,7 @@ from flask_cors import cross_origin
 from flask import render_template
 from . import app
 
+
 token = ''
 
 @app.route('/artists/<name>')
@@ -49,4 +50,6 @@ def get_token():
 
 @app.route('/add_city')
 def add_city():
-    return render_template('add_template.html')
+    from .forms import AddCityForm
+    form = AddCityForm()
+    return render_template('add_template.html', form=form)
