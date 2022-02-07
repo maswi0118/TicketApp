@@ -7,9 +7,12 @@ const initialState = {
 }
 
 export const useHomeFetch = () => {
+    const [searchTern, setSearchTerm] = useState('')
     const [state, setState] = useState(initialState);
     const [loading, setLoading] = useState(false);
     const [error, setError] =useState(false);
+
+    console.log(searchTern)
 
     const fetchArtists = async (artist) => {
         try {
@@ -29,9 +32,11 @@ export const useHomeFetch = () => {
         setLoading(false);
     };
 
+    //Initial and search
     useEffect(() => {
-        fetchArtists("kult");
-    }, [])
+        setState(initialState);
+        fetchArtists(searchTern);
+    }, [searchTern])
 
-    return { state, loading, error };
-}
+    return { state, loading, error, setSearchTerm, searchTern };
+};

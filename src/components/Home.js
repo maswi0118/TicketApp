@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 //API
 import SPOTIFY_API from'../SpotifyApi';
 //Config
@@ -7,13 +7,16 @@ import SPOTIFY_API from'../SpotifyApi';
 import MainImage from "./MainImage";
 import Grid from "./Grid";
 import Thumb from "./Thumb";
+import Spinner from "./Spinner"
+import SearchBar from "./SearchBar";
+import MoreButton from "./MoreButton"
 //Hook
 import { useHomeFetch } from "../hooks/useHomeFetch";
 //Image
 import NoImage from '../images/noImage.png';
 
 const Home = () => {
-    const { state, loading, error } = useHomeFetch();
+    const { state, loading, error, setSearchTerm } = useHomeFetch();
 
     console.log(state)
 
@@ -28,6 +31,7 @@ const Home = () => {
                     text={`Bilet se kup`}
                 />
             ) : null }
+            <SearchBar setSearchTerm={setSearchTerm}/>
             <Grid header='Incomming Events'>
                 {state != null ? state.artists.items.map(artist => (
                     <Thumb
@@ -38,6 +42,7 @@ const Home = () => {
                     />
                 )) : null}
             </Grid>
+            <Spinner/>
         </>
     );
 }
