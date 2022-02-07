@@ -1,13 +1,12 @@
+import base64
 import os
 import requests
-import base64
-from flask import Flask
-from flask_cors import CORS, cross_origin
+from flask_cors import cross_origin
+from flask import render_template
+from . import app
 
-app = Flask(__name__)
+
 token = ''
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 @app.route('/artists/<name>')
 @cross_origin()
@@ -34,7 +33,7 @@ def get_artists(name):
 
 
 def get_token():
-    message = CLIENT_ID + ":" + CLIENT_SECRET
+    message = os.getenv('CLIENT_ID') + ":" + os.getenv('CLIENT_SECRET')
     message_bytes = message.encode('ascii')
     base64_bytes = base64.b64encode(message_bytes)
     base64_message = base64_bytes.decode('ascii')
@@ -48,3 +47,11 @@ def get_token():
             "grant_type": "client_credentials"
         })
     return res.json().get('access_token')
+
+@app.route('/add_city')
+def add_city():
+    from .forms import AddCityForm
+    form = AddCityForm()
+    if form.validate_on_submit():
+
+    return render_template('add_template.html', form=form)
