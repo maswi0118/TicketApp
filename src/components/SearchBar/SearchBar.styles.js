@@ -4,7 +4,7 @@ export const Wrapper = styled.div`
   display: flex;
   align-items: center;
   height: 100px;
-  background: gray;
+  background: var(--darkGray);
   padding: 0 20px;
 `;
 
@@ -13,7 +13,7 @@ export const Content = styled.div`
   max-width: var(--maxWidth);
   width: 100%;
   height: 55px;
-  background: lightgray;
+  background: var(--medGray);
   margin: 0 auto;
   border-radius: 40px;
   color: white;
@@ -26,7 +26,7 @@ export const Content = styled.div`
   }
   
   input {
-    font-size: 28px;
+    font-size: var(--fontBig);
     position: absolute;
     left: 0;
     margin: 8px 0;

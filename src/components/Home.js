@@ -43,6 +43,7 @@ const Home = () => {
                 )) : null}
             </Grid>
             <Spinner/>
+            <MoreButton text={'Load More'}/>
         </>
     );
 }
