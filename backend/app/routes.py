@@ -53,5 +53,4 @@ def add_city():
     from .forms import AddCityForm
     form = AddCityForm()
     if form.validate_on_submit():
-
-    return render_template('add_template.html', form=form)
+        return render_template('add_template.html', form=form)
