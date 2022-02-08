@@ -1,0 +1,101 @@
+body {
+    background-color: slategray !important;
+    height: 100%;
+}
+html {
+    height: 100%;
+}
+
+.jumbotron-fluid{
+    padding: 20px 20px 0 0;
+}
+.nav_admin {
+  background-color: yellow !important;
+  align-items: center;
+    color: #0a0a0a !important;
+  justify-content: space-between;
+  padding: 10px 10px 0 20px;
+}
+
+.nav_admin .return_btn {
+    transition: .2s;
+}
+
+.nav_admin .return_btn:hover {
+    transform: scale(1.2);
+}
+
+.nav_admin .navbar-brand {
+  color: #59344F;
+  min-font-size: 120%;
+}
+
+.choice_container {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    /*margin-bottom: 0px;*/
+    max-height: 400px;
+    padding: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form_container .form-group{
+    margin: 10px 0px 10px 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.form_container {
+    display: block;
+    justify-content: center;
+}
+
+.form {
+    margin: 0 auto;
+    justify-content: center !important;
+    text-align: center;
+}
+
+.form_container .btn-default {
+    background-color: yellow;
+    text-align: center;
+    /*margin-left: 33%;*/
+    width: 100px;
+    transition: transform .2s;
+}
+
+.form_container .btn-default:hover {
+    transform: scale(1.2);
+}
+
+.choice_container .list-group-item {
+    width: 300px;
+    margin: 20px 10px 0 0;
+    text-align: -webkit-center;
+    text-align: center;
+    background-color: yellow;
+    transition: transform .2s;
+    color: black;
+}
+.choice_container .list-group-item:hover {
+    transform: scale(1.2);
+    background-color: yellowgreen;
+}
+
+.footer_admin {
+    display: flex;
+    margin: 50px 50px 0 0;
+    justify-content: space-around;
+    align-items: center;
+    background-color: transparent;
+    position: fixed;
+    left: 0;
+    bottom: 50px;
+    width: 100%;
+}
