@@ -1,5 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, BooleanField, TextAreaField, IntegerField, DateField
+from wtforms import StringField, SubmitField, SelectField, BooleanField, TextAreaField, IntegerField, DateField, DecimalField
+
+
 
 class AddCityForm(FlaskForm):
     city = StringField('Dodaj nowe miasto do bazy danych:')
@@ -22,11 +24,23 @@ class AddArtistForm(FlaskForm):
     about = TextAreaField('Krótko opisz artyste')
     submit = SubmitField('Zatwierdź')
 
+
 class AddEventForm(FlaskForm):
     from .database import get_artists, get_locations
     name = StringField('Jak nazywa się wydarzenie?')
     date = DateField('Kiedy odbędzie się wydarzenie?')
-    limit = IntegerField('Jaki jest limit osób na tym wydarzeniu?')
+    price = DecimalField('Ile będzie kosztował bilet na wydarzenie?')
     location = SelectField('W którym obiekcie będzie miało miejsce wydarzenie?', choices=get_locations())
     artist = SelectField('Jaki artysta wystąpi?', choices=get_artists())
+    submit = SubmitField('Zatwierdź')
+
+
+class SelectProvince(FlaskForm):
+    from .database import get_districts
+    province = SelectField('Wybierz województwo', choices=get_districts())
+    submit = SubmitField('Zatwierdź')
+
+
+class SelectCity(FlaskForm):
+    city = SelectField('Wybierz miasto')
     submit = SubmitField('Zatwierdź')
