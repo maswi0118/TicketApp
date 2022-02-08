@@ -54,6 +54,9 @@ def add_city():
     from .database import add_city as add
     form = AddCityForm()
     if form.validate_on_submit():
+<<<<<<< HEAD
+        return render_template('add_template.html', form=form)
+=======
         if add(form.city.data, form.province.data):
             flash(f'Poprawnie dodano: {form.city.data}, {form.province.data}.')
         else:
@@ -96,3 +99,4 @@ def add_event():
         else:
             flash(f'Nie udało dodać się wydarzenia {form.name.data}')
     return render_template('add_template.html', form=form)
+>>>>>>> 3176fabd32d8377c3eb94b74f7fedfa0190ac53a
