@@ -4,6 +4,7 @@ import requests
 from flask_cors import cross_origin
 from flask import render_template, flash
 from . import app
+import json
 
 token = ''
 
@@ -105,4 +106,9 @@ def add_event():
             flash(f'Nie udało dodać się wydarzenia {form.name.data}')
     return render_template('add_template.html', form=form)
 
+
+@app.route('/get_events/<name>')
+def get_events(name: str):
+    from .database import get_events
+    return json.dumps(get_events(name))
 

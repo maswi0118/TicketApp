@@ -115,3 +115,20 @@ def add_event(name: str, date: datetime, limit: int, location: str, artist: str)
         print(e)
         return False
     return cursor.rowcount == 1
+
+
+def get_events(name: str):
+    sql = "SELECT * FROM events WHERE name LIKE %s"
+    val = ('%' + name + '%',)
+    cursor = db.cursor()
+    try:
+        cursor.execute(sql, val)
+    except Exception as e:
+        print(e)
+        return False
+    res = []
+    for row in cursor.fetchall():
+        res.append({'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
+                    'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
+                    'aid': row[9]})
+    return res
