@@ -2,7 +2,7 @@ import base64
 import os
 import requests
 from flask_cors import cross_origin
-from flask import render_template, flash
+from flask import render_template, flash, redirect
 from . import app
 import json
 
@@ -94,13 +94,35 @@ def add_artist():
     return render_template('add_template.html', form=form)
 
 
-@app.route('/add_event', methods=['POST', 'GET'])
-def add_event():
-    from .forms import AddEventForm
-    from .database import add_event as add
-    form = AddEventForm()
+@app.route('/add_event_province', methods=['POST', 'GET'])
+def add_event_province():
+    from .forms import SelectProvince
+    form = SelectProvince()
     if form.validate_on_submit():
-        if add(form.name.data, form.date.data, form.limit.data, form.location.data, form.artist.data):
+        return redirect(f'/add_event_city/{form.province.data}')
+    return render_template('add_template.html', form=form)
+
+
+@app.route('/add_event_city/<province>', methods=['POST', 'GET'])
+def add_event_city(province):
+    from .forms import SelectCity
+    from .database import get_cities
+    form = SelectCity()
+    form.city.choices = get_cities(province)
+    if form.validate_on_submit():
+        return redirect(f'/add_event/{form.city.data}')
+    return render_template('add_template.html', form=form)
+
+
+@app.route('/add_event/<city>', methods=['POST', 'GET'])
+def add_event(city):
+    from .forms import AddEventForm
+    from .database import add_event as add, get_cid, get_locations
+    cid = get_cid(city)
+    form = AddEventForm()
+    form.location.choices = get_locations(cid)
+    if form.validate_on_submit():
+        if add(form.name.data, form.date.data, form.price.data, form.location.data, form.artist.data):
             flash(f'Poprawnie dodano wydarzenie {form.name.data}')
         else:
             flash(f'Nie udało dodać się wydarzenia {form.name.data}')
@@ -112,3 +134,5 @@ def get_events(name: str):
     from .database import get_events
     return json.dumps(get_events(name))
 
+
+# TODO endpoint z postem do logowania
