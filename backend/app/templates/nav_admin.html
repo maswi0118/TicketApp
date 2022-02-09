@@ -1,8 +1,17 @@
 {% block nav_admin %}
   <nav class="navbar nav_admin">
     <a class="navbar-brand" href="http://127.0.0.1:5000/admin_panel">PójścieApp - admin_panel</a>
-    <a href='http://127.0.0.1:5000/admin_panel'>
-      <img alt='return to admin' class='return_btn' src="../static/images/returnleft.png" width="30" height="30">
-    </a>
+    <div class="list-inline">
+      <div class="list-inline-item">
+        <a href='http://127.0.0.1:5000/admin_panel'>
+          <img alt='return to admin' class='return_btn' src="../static/images/returnleft.png" width="30" height="30">
+        </a>
+      </div>
+      <div class="list-inline-item">
+        <a href='http://127.0.0.1:3000'>
+          <img alt='return to front' class='return_btn' src="../static/images/logo192.png" width="30" height="30">
+        </a>
+      </div>
+    </div>
   </nav>
 {% endblock %}
