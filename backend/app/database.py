@@ -173,26 +173,36 @@ def add_event(name: str, date: datetime, price: int, location: str, artist: str)
     return res
 
 
-def get_events(name: str):
+def get_events(name: str = None):
     db = connect()
-    sql = """SELECT e.eid, e.name, e.date, e.maxAmount, e.sold, e.lid, e.income, e.soldout,
-          e.isOver, e.artists_aid, a.name, a.genre, a.photolink FROM events e, artists a 
-          WHERE e.artists_aid = a.aid AND (e.name LIKE %s OR a.name LIKE %s) ORDER BY e.date"""
-    val = (f'%{name}%', f'%{name}%')
     cursor = db.cursor()
-    try:
-        cursor.execute(sql, val)
-    except Exception as e:
-        print(e)
-        return False
+    if name:
+        sql = """SELECT e.eid, e.name, e.date, e.maxAmount, e.sold, e.lid, e.income, e.soldout,
+              e.isOver, e.artists_aid, a.name, a.genre, a.photolink FROM events e, artists a 
+              WHERE e.artists_aid = a.aid AND (e.name LIKE %s OR a.name LIKE %s) ORDER BY e.date"""
+        val = (f'%{name}%', f'%{name}%')
+        try:
+            cursor.execute(sql, val)
+        except Exception as e:
+            print(e)
+            return False
+    else:
+        sql = """SELECT e.eid, e.name, e.date, e.maxAmount, e.sold, e.lid, e.income, e.soldout,
+                      e.isOver, e.artists_aid, a.name, a.genre, a.photolink FROM events e, artists a 
+                      WHERE e.artists_aid = a.aid ORDER BY e.date"""
+        try:
+            cursor.execute(sql)
+        except Exception as e:
+            print(e)
+            return False
     res = defaultdict()
     i = 0
     for row in cursor.fetchall():
         if i//PAG_SIZE not in res.keys():
             res[i//PAG_SIZE] = []
         res[i//PAG_SIZE].append({'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
-                    'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
-                    'aid': row[9], 'artistName': row[10], 'genre': row[11], 'url': row[12]})
+                                 'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
+                                 'aid': row[9], 'artistName': row[10], 'genre': row[11], 'url': row[12]})
         i += 1
     cursor.close()
     db.close()

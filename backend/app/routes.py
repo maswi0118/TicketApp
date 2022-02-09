@@ -158,6 +158,13 @@ def get_events(name: str):
     from .database import get_events
     return json.dumps(get_events(name))
 
+
+@app.route('/get_events/')
+def get_all_events():
+    from .database import get_events
+    return json.dumps(get_events())
+
+
 # TODO zwracanie
 @app.route('/auth/register', methods=['POST'])
 def register():
