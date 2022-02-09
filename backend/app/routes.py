@@ -87,12 +87,35 @@ def add_artist():
     from .database import add_artist as add
     form = AddArtistForm()
     if form.validate_on_submit():
-        if add(form.name.data, form.genre.data, form.nationality.data, form.about.data):
-            flash(f'Poprawnie dodano: {form.name.data}, {form.nationality.data}.')
+        aid = add(form.name.data, form.genre.data, form.nationality.data, form.about.data)
+        if aid:
+            return redirect(f'/add_artist/{aid}')
         else:
             flash(f'Nie udało się dodać {form.name.data}, {form.nationality.data}.')
     return render_template('add_template.html', form=form)
 
+
+
+@app.route('/add_artist/<aid>', methods=['POST', 'GET'])
+def add_artist_image(aid: int):
+    from .database import get_artists, set_image
+    import urllib.request, json
+    from .forms import ImageSelect
+    artist_name = get_artists(aid)
+    hrefs = []
+    with urllib.request.urlopen(f'http://127.0.0.1:5000/artists/{artist_name.replace(" ", "+")}') as url:
+        data = json.loads(url.read().decode())
+        for item in data['artists']['items']:
+            for image in item['images']:
+                hrefs.append(image['url'])
+                break
+    form = ImageSelect()
+    form.number.choices = list(range(len(hrefs)))
+    if form.validate_on_submit():
+        set_image(aid, hrefs[int(form.number.data)])
+        flash(f'Poprawnie dodano: {artist_name}.')
+        return redirect('/admin_panel')
+    return render_template('aritstst_img.html', form=form, hrefs=hrefs, n=len(hrefs))
 
 @app.route('/add_event_province', methods=['POST', 'GET'])
 def add_event_province():

@@ -88,18 +88,24 @@ def add_artist(name: str, genre: str, nationality: str, about: str) -> bool:
     except Exception as e:
         print(e)
         return False
-    res = cursor.rowcount == 1
+    res = cursor.lastrowid
     cursor.close()
     db.close()
     return res
 
 
-def get_artists() -> list[str]:
+def get_artists(aid: int = None) -> list[str]:
     db = connect()
-    sql = 'SELECT name FROM artists;'
-    cursor = db.cursor()
-    cursor.execute(sql)
-    res = [x[0] for x in cursor.fetchall()]
+    cursor = db.cursor(buffered=True)
+    if aid:
+        sql = 'SELECT name FROM artists WHERE aid = %s'
+        val = (aid, )
+        cursor.execute(sql, val)
+        res = cursor.fetchone()[0]
+    else:
+        sql = 'SELECT name FROM artists;'
+        cursor.execute(sql)
+        res = [x[0] for x in cursor.fetchall()]
     cursor.close()
     db.close()
     return res
@@ -224,3 +230,13 @@ def get_maxAmount(lid: int) -> int:
     cursor.close()
     db.close()
     return res
+
+
+def set_image(aid: int, src: str):
+    db = connect()
+    cursor = db.cursor()
+    sql = 'UPDATE artists SET photolink = %s WHERE aid = %s'
+    val = (src, aid)
+    cursor.execute(sql, val)
+    cursor.close()
+    db.close()

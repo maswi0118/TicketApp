@@ -44,3 +44,8 @@ class SelectProvince(FlaskForm):
 class SelectCity(FlaskForm):
     city = SelectField('Wybierz miasto')
     submit = SubmitField('Zatwierdź')
+
+
+class ImageSelect(FlaskForm):
+    number = SelectField('Które zdjęcie pasuje do tego artysty?')
+    submit = SubmitField('Zatwierdź')
