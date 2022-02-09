@@ -173,7 +173,7 @@ def add_event(name: str, date: datetime, price: int, location: str, artist: str)
 
 def get_events(name: str):
     db = connect()
-    sql = "SELECT * FROM events WHERE name LIKE %s ORDER BY date LIMIT 5 OFFSET 0"
+    sql = "SELECT * FROM events WHERE name LIKE %s ORDER BY date"
     val = (f'%{name}%',)
     cursor = db.cursor()
     try:
@@ -186,9 +186,13 @@ def get_events(name: str):
         res.append({'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
                     'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
                     'aid': row[9]})
+    response = {}
+    n = len(res)
+    for i in range(n//5):
+        response[i] = res[i*5:i*5+5]
     cursor.close()
     db.close()
-    return res
+    return {'page': [response]}
 
 # def get_artists(name: str = ''):
 #     db = connect()

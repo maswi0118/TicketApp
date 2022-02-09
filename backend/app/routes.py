@@ -95,7 +95,6 @@ def add_artist():
     return render_template('add_template.html', form=form)
 
 
-
 @app.route('/add_artist/<aid>', methods=['POST', 'GET'])
 def add_artist_image(aid: int):
     from .database import get_artists, set_image
@@ -116,6 +115,7 @@ def add_artist_image(aid: int):
         flash(f'Poprawnie dodano: {artist_name}.')
         return redirect('/admin_panel')
     return render_template('aritstst_img.html', form=form, hrefs=hrefs, n=len(hrefs))
+
 
 @app.route('/add_event_province', methods=['POST', 'GET'])
 def add_event_province():
@@ -156,6 +156,5 @@ def add_event(city):
 def get_events(name: str):
     from .database import get_events
     return json.dumps(get_events(name))
-
 
 # TODO endpoint z postem do logowania
