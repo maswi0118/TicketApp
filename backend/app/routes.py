@@ -2,7 +2,7 @@ import base64
 import os
 import requests
 from flask_cors import cross_origin
-from flask import render_template, flash, redirect
+from flask import render_template, flash, redirect, request
 from . import app
 import json
 
@@ -152,10 +152,21 @@ def add_event(city):
             flash(f'Nie udało dodać się wydarzenia {form.name.data}')
     return render_template('add_template.html', form=form)
 
-
+#TODO get events bez argumentu
 @app.route('/get_events/<name>')
 def get_events(name: str):
     from .database import get_events
     return json.dumps(get_events(name))
 
-# TODO endpoint z postem do logowania
+# TODO zwracanie
+@app.route('/auth/register', methods=['POST'])
+def register():
+    from .database import add_user
+    username = request.form.get('username')
+    password = request.form.get('password')
+    email = request.form.get('email')
+    firstname = request.form.get('firstname')
+    lastname = request.form.get('lastname')
+    phone_number = request.form.get('phone_number')
+    return add_user(username, password, email, firstname, lastname, phone_number)
+

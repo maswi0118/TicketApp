@@ -24,7 +24,7 @@ class AddArtistForm(FlaskForm):
     about = TextAreaField('Krótko opisz artyste')
     submit = SubmitField('Zatwierdź')
 
-
+#TODO fix date
 class AddEventForm(FlaskForm):
     from .database import get_artists, get_locations
     name = StringField('Jak nazywa się wydarzenie?')

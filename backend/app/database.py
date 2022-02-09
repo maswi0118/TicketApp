@@ -196,7 +196,7 @@ def get_events(name: str):
         i += 1
     cursor.close()
     db.close()
-    return {'page': [res]}
+    return {'page': res}
 
 
 def get_districts():
@@ -230,3 +230,21 @@ def set_image(aid: int, src: str):
     cursor.execute(sql, val)
     cursor.close()
     db.close()
+
+
+def add_user(username: str, password: str, email: str, firstname: str, lastname: str, phone_number: str) -> bool:
+    db = connect()
+    sql = "INSERT INTO users(username, password, email, firstname, lastname, phone_number) " \
+          "VALUES (%s, %s, %s, %s, %s, %s)"
+    cursor = db.cursor()
+    val = (username, password, email, firstname, lastname, phone_number)
+    try:
+        cursor.execute(sql, val)
+        db.commit()
+    except Exception as e:
+        print(e)
+        return False
+    res = cursor.rowcount == 1
+    cursor.close()
+    db.close()
+    return res
