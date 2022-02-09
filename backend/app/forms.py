@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, BooleanField, TextAreaField, IntegerField, DateField, DecimalField
+from wtforms import StringField, SubmitField, SelectField, BooleanField, TextAreaField, IntegerField, DecimalField, DateTimeLocalField
 
 
 
@@ -28,7 +28,7 @@ class AddArtistForm(FlaskForm):
 class AddEventForm(FlaskForm):
     from .database import get_artists, get_locations
     name = StringField('Jak nazywa się wydarzenie?')
-    date = DateField('Kiedy odbędzie się wydarzenie?')
+    date = DateTimeLocalField('Kiedy odbędzie się wydarzenie?')
     price = DecimalField('Ile będzie kosztował bilet na wydarzenie?')
     location = SelectField('W którym obiekcie będzie miało miejsce wydarzenie?', choices=get_locations())
     artist = SelectField('Jaki artysta wystąpi?', choices=get_artists())

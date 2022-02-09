@@ -94,7 +94,6 @@ def add_artist():
             flash(f'Nie udało się dodać {form.name.data}, {form.nationality.data}.')
     return render_template('add_template.html', form=form)
 
-
 @app.route('/add_artist/<aid>', methods=['POST', 'GET'])
 def add_artist_image(aid: int):
     from .database import get_artists, set_image
@@ -105,9 +104,11 @@ def add_artist_image(aid: int):
     with urllib.request.urlopen(f'http://127.0.0.1:5000/artists/{artist_name.replace(" ", "+")}') as url:
         data = json.loads(url.read().decode())
         for item in data['artists']['items']:
-            for image in item['images']:
-                hrefs.append(image['url'])
-                break
+            try:
+                hrefs.append(item['images'][0]['url'])
+            except IndexError:
+                hrefs.append('../static/images/noImage.png')
+
     form = ImageSelect()
     form.number.choices = list(range(len(hrefs)))
     if form.validate_on_submit():

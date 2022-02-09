@@ -1,7 +1,9 @@
 import mysql.connector
 from os import getenv
 import datetime
+from collections import defaultdict
 
+PAG_SIZE = 2
 
 def connect():
     return mysql.connector.connect(
@@ -173,46 +175,29 @@ def add_event(name: str, date: datetime, price: int, location: str, artist: str)
 
 def get_events(name: str):
     db = connect()
-    sql = "SELECT * FROM events WHERE name LIKE %s ORDER BY date"
-    val = (f'%{name}%',)
+    sql = """SELECT e.eid, e.name, e.date, e.maxAmount, e.sold, e.lid, e.income, e.soldout,
+          e.isOver, e.artists_aid, a.name, a.genre, a.photolink FROM events e, artists a 
+          WHERE e.artists_aid = a.aid AND (e.name LIKE %s OR a.name LIKE %s) ORDER BY e.date"""
+    val = (f'%{name}%', f'%{name}%')
     cursor = db.cursor()
     try:
         cursor.execute(sql, val)
     except Exception as e:
         print(e)
         return False
-    res = []
+    res = defaultdict()
+    i = 0
     for row in cursor.fetchall():
-        res.append({'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
+        if i//PAG_SIZE not in res.keys():
+            res[i//PAG_SIZE] = []
+        res[i//PAG_SIZE].append({'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
                     'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
-                    'aid': row[9]})
-    response = {}
-    n = len(res)
-    for i in range(n//5):
-        response[i] = res[i*5:i*5+5]
+                    'aid': row[9], 'artistName': row[10], 'genre': row[11], 'url': row[12]})
+        i += 1
     cursor.close()
     db.close()
-    return {'page': [response]}
+    return {'page': [res]}
 
-# def get_artists(name: str = ''):
-#     db = connect()
-#     cursor = db.cursor()
-#     if name:
-#         sql = 'SELECT * FROM artists WHERE name LIKE %s'
-#         val = (f'%{name}%',)
-#     else:
-#         sql = 'SELECT * FROM artists'
-#         val =''
-#     try:
-#         cursor.execute(sql, val)
-#     except Exception as e:
-#         print(e)
-#         return False
-#     res = []
-#     for row in cursor.fetchall():
-#         res.append({'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
-#                     'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
-#                     'aid': row[9]})
 
 def get_districts():
     db = connect()
@@ -223,6 +208,7 @@ def get_districts():
     cursor.close()
     db.close()
     return res
+
 
 def get_maxAmount(lid: int) -> int:
     db = connect()
