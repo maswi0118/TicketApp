@@ -248,9 +248,12 @@ def get_maxAmount(lid: int) -> int:
 def set_image(aid: int, src: str):
     db = connect()
     cursor = db.cursor()
+    if src == '../static/images/noImage.png':
+        src = '../images/noImage.png'
     sql = 'UPDATE artists SET photolink = %s WHERE aid = %s'
     val = (src, aid)
     cursor.execute(sql, val)
+    db.commit()
     cursor.close()
     db.close()
 
