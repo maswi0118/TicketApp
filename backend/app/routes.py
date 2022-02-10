@@ -186,7 +186,13 @@ def login():
     return login_user(username, password)
 
 
-@app.route('/ticket/<eid>/<uid>')
+@app.route('/ticket/<eid>/<uid>', methods=['POST'])
 def ticket(eid: str, uid: str):
     from .database import add_ticket
     return add_ticket(uid, eid)
+
+
+@app.route('/get_tickets/<uid>')
+def get_tickets(uid: str):
+    from .database import get_tickets as get
+    return json.dumps(get(uid))

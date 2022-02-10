@@ -310,3 +310,30 @@ def add_ticket(uid: str, eid: str):
     cursor.close()
     db.close()
     return res
+
+
+def get_tickets(uid: str):
+    db = connect()
+    cursor = db.cursor()
+    sql = """SELECT e.eid, e.name, e.date, e.maxAmount, e.sold, e.lid, e.income, e.soldout,
+                     e.isOver, e.artists_aid, a.name, a.genre, a.photolink FROM events e, artists a, tickets t 
+                     WHERE e.artists_aid = a.aid AND t.eid = e.eid AND t.uid = %s ORDER BY e.date"""
+    val = (uid,)
+    try:
+        cursor.execute(sql, val)
+    except Exception as e:
+        print(e)
+        return False
+    res = defaultdict()
+    i = 0
+    for row in cursor.fetchall():
+        if i // PAG_SIZE not in res.keys():
+            res[i // PAG_SIZE] = []
+        res[i // PAG_SIZE].append(
+            {'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
+             'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
+             'aid': row[9], 'artistName': row[10], 'genre': row[11], 'url': row[12]})
+        i += 1
+    cursor.close()
+    db.close()
+    return {'page': res}
