@@ -198,7 +198,7 @@ def get_events(name: str = None):
             return False
     else:
         sql = """SELECT e.eid, e.name, e.date, e.maxAmount, e.sold, e.lid, e.income, e.soldout,
-                      e.isOver, e.artists_aid, a.name, a.genre, a.photolink FROM events e, artists a 
+                      e.isOver, e.artists_aid, a.name, a.genre, a.photolink,  FROM events e, artists a 
                       WHERE e.artists_aid = a.aid ORDER BY e.date"""
         try:
             cursor.execute(sql)
@@ -206,7 +206,7 @@ def get_events(name: str = None):
             print(e)
             return False
     items = cursor.fetchall()
-    res = [[] for i in range(len(items))]
+    res = [[] for i in range(len(items)//PAG_SIZE)]
     i = 0
     for row in items:
         res[i//PAG_SIZE].append([{'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
