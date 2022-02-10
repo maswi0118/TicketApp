@@ -11,18 +11,8 @@
 
 {% block page_content %}
 <div class="container choice_container">
-    <div class="list-group">
-        <div class="form_container">
-            {{ wtf.quick_form(form) }}
-        </div>
-        <div class='images_container list-group'>
-            {% for image in range(n) %}
-            <div class="artist_img_id_combo list-group-item">
-                <h2>{{image}}</h2>
-                <img alt='{{hrefs[image]}}' class='artist_img_container' src='{{hrefs[image]}}'>
-            </div>
-            {% endfor %}
-        </div>
+    <div class="form_container">
+        {{ wtf.quick_form(form) }}
     </div>
 </div>
 {% endblock %}
