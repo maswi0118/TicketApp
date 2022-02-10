@@ -187,7 +187,7 @@ def get_events(name: str = None):
     cursor = db.cursor()
     if name:
         sql = """SELECT e.eid, e.name, e.date, e.maxAmount, e.sold, e.lid, e.income, e.soldout,
-              e.isOver, e.artists_aid, a.name, a.genre, a.photolink FROM events e, artists a 
+              e.isOver, e.artists_aid, a.name, a.genre, a.photolink, e.price FROM events e, artists a 
               WHERE e.artists_aid = a.aid AND (e.name LIKE %s OR a.name LIKE %s) ORDER BY e.date"""
         val = (f'%{name}%', f'%{name}%')
         try:
