@@ -3,17 +3,18 @@ from os import getenv
 import datetime
 from collections import defaultdict
 
+from typing import List
+
 PAG_SIZE = 6
 
 
 def connect():
     return mysql.connector.connect(
         host='127.0.0.1',
-        user='root',
-        password='123456789',
+        user='macius',
+        password='siema',
         database='s403025'
     )
-
 
 def add_city(city: str, province: str) -> bool:
     db = connect()
@@ -34,7 +35,7 @@ def add_city(city: str, province: str) -> bool:
     return res
 
 
-def get_cities(province: str = None) -> list[str]:
+def get_cities(province: str = None) -> List[str]:
     db = connect()
     cursor = db.cursor()
     if province:
@@ -103,7 +104,7 @@ def add_artist(name: str, genre: str, nationality: str, about: str) -> bool:
     return res
 
 
-def get_artists(aid: int = None) -> list[str]:
+def get_artists(aid: int = None) -> List[str]:
     db = connect()
     cursor = db.cursor(buffered=True)
     if aid:
@@ -132,7 +133,7 @@ def get_aid(name: str) -> int:
     return res
 
 
-def get_locations(cid: int = None) -> list[str]:
+def get_locations(cid: int = None) -> List[str]:
     db = connect()
     cursor = db.cursor()
     if cid:
