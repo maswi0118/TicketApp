@@ -288,3 +288,25 @@ def login_user(username: str, password: str) -> bool:
     cursor.close()
     db.close()
     return password == db_password
+
+
+def add_ticket(uid: str, eid: str):
+    db = connect()
+    sql = "INSERT INTO tickets(uid, eid) VALUES (%s, %s)"
+    sql2 = "UPDATE events SET sold = sold + 1 WHERE eid = %s"
+    cursor = db.cursor()
+    val = (uid, eid)
+    val2 = (eid,)
+    try:
+        cursor.execute(sql2, val2)
+        cursor.execute(sql, val)
+        db.commit()
+    except Exception as e:
+        print(e)
+        cursor.close()
+        db.close()
+        return False
+    res = cursor.lastrowid
+    cursor.close()
+    db.close()
+    return res

@@ -184,3 +184,9 @@ def login():
     username = request.form.get('username')
     password = request.form.get('password')
     return login_user(username, password)
+
+
+@app.route('/ticket/<eid>/<uid>')
+def ticket(eid: str, uid: str):
+    from .database import add_ticket
+    return add_ticket(uid, eid)
