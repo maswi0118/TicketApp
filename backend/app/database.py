@@ -276,7 +276,7 @@ def add_user(username: str, password: str, email: str, firstname: str, lastname:
     res = cursor.rowcount == 1
     cursor.close()
     db.close()
-    return res
+    return str(res).lower()
 
 
 def login_user(username: str, password: str) -> bool:
@@ -344,3 +344,34 @@ def get_tickets(uid: str):
     cursor.close()
     db.close()
     return {'page': res}
+
+
+def get_admin(login: str):
+    db = connect()
+    cursor = db.cursor()
+    sql = "SELECT * FROM admins WHERE login = %s"
+    val = (login,)
+    try:
+        cursor.execute(sql, val)
+    except Exception as e:
+        print(e)
+        return False
+    res = cursor.fetchone()
+    cursor.close()
+    db.close()
+    return res
+
+
+def add_admin(login: str, password: str):
+    db = connect()
+    cursor = db.cursor()
+    sql = "INSERT INTO admins(login, password) VALUES (%s, %s)"
+    val = (login, password)
+    try:
+        cursor.execute(sql, val)
+    except Exception as e:
+        print(e)
+        return False
+    db.commit()
+    cursor.close()
+    db.close()
