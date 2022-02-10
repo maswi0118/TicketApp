@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
+import create from 'zustand'
 //Routing
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 //Components
@@ -20,7 +21,7 @@ const App = () => (
             <Route path='/' element={<Home/>}/>
             <Route path='/eventId' element={<Events/>}/>
             <Route path='/tickets' element={<Ticket/>}/>
-            <Route path='profile' element={<Profile/>}/>
+            <Route path='/profile' element={<Profile/>}/>
             <Route path='/*' element={<NotFound/>}/>
         </Routes>
       <GlobalStyle/>

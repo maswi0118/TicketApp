@@ -10,7 +10,7 @@ import Menu from "../Menu";
 const Header = () => (
     <Wrapper>
         <Content>
-            <LogoImg src={TicketLogo} alt='ticket-logo'/>
+            <a href="/"><LogoImg src={TicketLogo} alt='ticket-logo'/></a>
             <Menu/>
         </Content>
     </Wrapper>

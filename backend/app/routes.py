@@ -94,6 +94,7 @@ def add_artist():
             flash(f'Nie udało się dodać {form.name.data}, {form.nationality.data}.')
     return render_template('add_template.html', form=form)
 
+
 @app.route('/add_artist/<aid>', methods=['POST', 'GET'])
 def add_artist_image(aid: int):
     from .database import get_artists, set_image
@@ -155,44 +156,42 @@ def add_event(city):
 
 
 @app.route('/get_events/<name>')
+@cross_origin()
 def get_events(name: str):
     from .database import get_events
     return json.dumps(get_events(name))
 
 
 @app.route('/get_events/')
+@cross_origin()
 def get_all_events():
     from .database import get_events
     return json.dumps(get_events())
 
 
-@app.route('/auth/register', methods=['POST'])
-def register():
+@app.route('/auth/register/<username>/<password>/<email>/<firstname>/<lastname>/<phone_number>', methods=['POST'])
+@cross_origin()
+def register(username, password, email, firstname, lastname, phone_number):
     from .database import add_user
-    username = request.form.get('username')
-    password = request.form.get('password')
-    email = request.form.get('email')
-    firstname = request.form.get('firstname')
-    lastname = request.form.get('lastname')
-    phone_number = request.form.get('phone_number')
     return add_user(username, password, email, firstname, lastname, phone_number)
 
 
-@app.route('/auth/login', methods=['POST'])
-def login():
+@app.route('/auth/login/<username>/<password>', methods=['POST'])
+@cross_origin()
+def login(username, password):
     from .database import login_user
-    username = request.form.get('username')
-    password = request.form.get('password')
     return login_user(username, password)
 
 
 @app.route('/ticket/<eid>/<uid>', methods=['POST'])
+@cross_origin()
 def ticket(eid: str, uid: str):
     from .database import add_ticket
     return add_ticket(uid, eid)
 
 
 @app.route('/get_tickets/<uid>')
+@cross_origin()
 def get_tickets(uid: str):
     from .database import get_tickets as get
     return json.dumps(get(uid))

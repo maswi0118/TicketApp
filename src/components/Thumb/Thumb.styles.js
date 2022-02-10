@@ -30,5 +30,5 @@ export const Image = styled.img`
 `;
 
 export const Details = styled.a`
-  ;
+
 `;

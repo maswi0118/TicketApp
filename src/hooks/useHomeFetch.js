@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 //API
-import SPOTIFY_API from "../SpotifyApi";
+import API from "../Api";
 
 const initialState = {
-    artists: {items: []}
+    page: []
 }
 
 export const useHomeFetch = () => {
@@ -11,19 +11,22 @@ export const useHomeFetch = () => {
     const [state, setState] = useState(initialState);
     const [loading, setLoading] = useState(false);
     const [error, setError] =useState(false);
+    const [isLoadingNext, setIsLoadingNext] = useState(false)
+    const [isLoadingPrevious, setIsLoadingPrevious] = useState(false)
+    const [pageNumber, setPageNumber] = useState(0);
+
 
     console.log(searchTern)
 
-    const fetchArtists = async (artist) => {
+    const fetchEvents= async (searchTerm) => {
         try {
             setError(false);
             setLoading(true);
 
-            const artists = await SPOTIFY_API.fetchArtists(artist);
+            const events = await API.fetchEvents(searchTerm);
 
-            // console.log(artists);
 
-            setState(artists);
+            setState(events)
 
 
         } catch (error) {
@@ -35,8 +38,20 @@ export const useHomeFetch = () => {
     //Initial and search
     useEffect(() => {
         setState(initialState);
-        fetchArtists(searchTern);
+        fetchEvents(searchTern);
     }, [searchTern])
 
-    return { state, loading, error, setSearchTerm, searchTern };
+    useEffect(() => {
+        if (!isLoadingNext) return
+        setPageNumber(pageNumber + 1)
+        setIsLoadingNext(false)
+    }, [isLoadingNext, pageNumber]);
+
+    useEffect(() => {
+        if (!isLoadingPrevious) return
+        setPageNumber(pageNumber - 1)
+        setIsLoadingPrevious(false)
+    }, [isLoadingPrevious, pageNumber]);
+
+    return { state, loading, error, setSearchTerm, searchTern, setIsLoadingNext, setIsLoadingPrevious, pageNumber };
 };
