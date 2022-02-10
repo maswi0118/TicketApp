@@ -195,14 +195,14 @@ def register(username, password, email, firstname, lastname, phone_number):
     return add_user(username, password, email, firstname, lastname, phone_number)
 
 
-@app.route('/auth/login/<username>/<password>', methods=['POST'])
+@app.route('/auth/login/<username>/<password>', methods=['GET'])
 @cross_origin()
 def login(username, password):
     from .database import login_user
     return login_user(username, password)
 
 
-@app.route('/ticket/<eid>/<uid>', methods=['POST'])
+@app.route('/ticket/<eid>/<uid>', methods=['GET'])
 @cross_origin()
 def ticket(eid: str, uid: str):
     from .database import add_ticket
@@ -243,3 +243,5 @@ def admin_register():
             add_admin(username, password)
             return redirect('/login')
     return render_template('add_template.html', form=form)
+
+

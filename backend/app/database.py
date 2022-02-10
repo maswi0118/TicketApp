@@ -275,7 +275,7 @@ def add_user(username: str, password: str, email: str, firstname: str, lastname:
     res = cursor.rowcount == 1
     cursor.close()
     db.close()
-    return res
+    return str(res).lower()
 
 
 def login_user(username: str, password: str) -> bool:
