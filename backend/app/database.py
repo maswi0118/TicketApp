@@ -5,6 +5,7 @@ from collections import defaultdict
 
 PAG_SIZE = 2
 
+
 def connect():
     return mysql.connector.connect(
         host='127.0.0.1',
@@ -38,7 +39,7 @@ def get_cities(province: str = None) -> list[str]:
     cursor = db.cursor()
     if province:
         sql = 'SELECT city FROM cities WHERE province = %s'
-        val = (province, )
+        val = (province,)
         cursor.execute(sql, val)
     else:
         sql = 'SELECT city FROM cities;'
@@ -107,7 +108,7 @@ def get_artists(aid: int = None) -> list[str]:
     cursor = db.cursor(buffered=True)
     if aid:
         sql = 'SELECT name FROM artists WHERE aid = %s'
-        val = (aid, )
+        val = (aid,)
         cursor.execute(sql, val)
         res = cursor.fetchone()[0]
     else:
@@ -198,7 +199,7 @@ def get_events(name: str = None):
             return False
     else:
         sql = """SELECT e.eid, e.name, e.date, e.maxAmount, e.sold, e.lid, e.income, e.soldout,
-                      e.isOver, e.artists_aid, a.name, a.genre, a.photolink,  FROM events e, artists a 
+                      e.isOver, e.artists_aid, a.name, a.genre, a.photolink, e.price FROM events e, artists a 
                       WHERE e.artists_aid = a.aid ORDER BY e.date"""
         try:
             cursor.execute(sql)
@@ -206,12 +207,14 @@ def get_events(name: str = None):
             print(e)
             return False
     items = cursor.fetchall()
-    res = [[] for i in range(len(items)//PAG_SIZE)]
+    res = [[] for i in range(len(items) // PAG_SIZE)]
     i = 0
     for row in items:
-        res[i//PAG_SIZE].append([{'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
-                                 'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
-                                 'aid': row[9], 'artistName': row[10], 'genre': row[11], 'url': row[12]}])
+        res[i // PAG_SIZE].append(
+            [{'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
+              'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
+              'aid': row[9], 'artistName': row[10], 'genre': row[11], 'url': row[12],
+              'price': row[13]}])
         i += 1
     cursor.close()
     db.close()
