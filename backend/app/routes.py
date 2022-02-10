@@ -2,15 +2,21 @@ import base64
 import os
 import requests
 from flask_cors import cross_origin
-from flask import render_template, flash, redirect, request
+from flask import render_template, flash, redirect, session
 from . import app
 import json
-
+import hashlib
 token = ''
 
 
+def is_not_logged():
+    return 'username' not in session.keys()
+
+
 @app.route('/admin_panel', methods=['POST', 'GET'])
-def admin():
+def admin_panel():
+    if is_not_logged():
+        return redirect('/login')
     return render_template('admin.html')
 
 
@@ -57,6 +63,8 @@ def get_token():
 
 @app.route('/add_city', methods=['POST', 'GET'])
 def add_city():
+    if is_not_logged():
+        return redirect('/login')
     from .forms import AddCityForm
     from .database import add_city as add
     form = AddCityForm()
@@ -70,6 +78,8 @@ def add_city():
 
 @app.route('/add_location', methods=['POST', 'GET'])
 def add_location():
+    if is_not_logged():
+        return redirect('/login')
     from .forms import AddLocationForm
     from .database import add_location as add
     form = AddLocationForm()
@@ -83,6 +93,8 @@ def add_location():
 
 @app.route('/add_artist', methods=['POST', 'GET'])
 def add_artist():
+    if is_not_logged():
+        return redirect('/login')
     from .forms import AddArtistForm
     from .database import add_artist as add
     form = AddArtistForm()
@@ -97,6 +109,8 @@ def add_artist():
 
 @app.route('/add_artist/<aid>', methods=['POST', 'GET'])
 def add_artist_image(aid: int):
+    if is_not_logged():
+        return redirect('/login')
     from .database import get_artists, set_image
     import urllib.request, json
     from .forms import ImageSelect
@@ -121,6 +135,8 @@ def add_artist_image(aid: int):
 
 @app.route('/add_event_province', methods=['POST', 'GET'])
 def add_event_province():
+    if is_not_logged():
+        return redirect('/login')
     from .forms import SelectProvince
     form = SelectProvince()
     if form.validate_on_submit():
@@ -130,6 +146,8 @@ def add_event_province():
 
 @app.route('/add_event_city/<province>', methods=['POST', 'GET'])
 def add_event_city(province):
+    if is_not_logged():
+        return redirect('/login')
     from .forms import SelectCity
     from .database import get_cities
     form = SelectCity()
@@ -141,13 +159,14 @@ def add_event_city(province):
 
 @app.route('/add_event/<city>', methods=['POST', 'GET'])
 def add_event(city):
+    if is_not_logged():
+        return redirect('/login')
     from .forms import AddEventForm
     from .database import add_event as add, get_cid, get_locations
     cid = get_cid(city)
     form = AddEventForm()
     form.location.choices = get_locations(cid)
     if form.validate_on_submit():
-        print(form.date.data)
         if add(form.name.data, form.date.data, form.price.data, form.location.data, form.artist.data):
             flash(f'Poprawnie dodano wydarzenie {form.name.data}')
         else:
@@ -195,3 +214,32 @@ def ticket(eid: str, uid: str):
 def get_tickets(uid: str):
     from .database import get_tickets as get
     return json.dumps(get(uid))
+
+
+@app.route('/login', methods=['POST', 'GET'])
+def admin_login():
+    from .forms import LoginForm
+    from .database import get_admin
+    form = LoginForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = hashlib.sha256(form.password.data.encode()).hexdigest()
+        admin = get_admin(username)
+        if admin[2] == password and admin[3] == 1:
+            session['username'] = username
+            return redirect('/admin_panel')
+    return render_template('add_template.html', form=form)
+
+
+@app.route('/register', methods=['POST', 'GET'])
+def admin_register():
+    from .forms import RegisterForm
+    from .database import add_admin
+    form = RegisterForm()
+    if form.validate_on_submit():
+        if form.password.data == form.password2.data:
+            username = form.username.data
+            password = hashlib.sha256(form.password.data.encode()).hexdigest()
+            add_admin(username, password)
+            return redirect('/login')
+    return render_template('add_template.html', form=form)

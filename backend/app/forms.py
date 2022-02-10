@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, BooleanField, TextAreaField, IntegerField, \
-    DecimalField, DateTimeLocalField
+    DecimalField, DateTimeLocalField, PasswordField
 
 
 class AddCityForm(FlaskForm):
@@ -50,4 +50,17 @@ class SelectCity(FlaskForm):
 
 class ImageSelect(FlaskForm):
     number = SelectField('Które zdjęcie pasuje do tego artysty?')
+    submit = SubmitField('Zatwierdź')
+
+
+class LoginForm(FlaskForm):
+    username = StringField('Nazwa użytkownika')
+    password = PasswordField('Hasło')
+    submit = SubmitField('Zatwierdź')
+
+
+class RegisterForm(FlaskForm):
+    username = StringField('Nazwa użytkownika')
+    password = PasswordField('Hasło')
+    password2 = PasswordField('Potwierdź hasło')
     submit = SubmitField('Zatwierdź')
