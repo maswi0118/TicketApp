@@ -1,10 +1,5 @@
 const MenuItems = [
     {
-        title: 'Home',
-        url: '/',
-        cName: 'nav-links'
-    },
-    {
         title: 'Events',
         url: '/#events',
         cName: 'nav-links'
@@ -17,7 +12,12 @@ const MenuItems = [
     {
         title: 'Profile',
         url: 'profile',
-        cName: 'nav-links-mobile'
+        cName: 'nav-links'
+    },
+    {
+        title: 'Admin Panel',
+        url: 'http://localhost:5000/admin_panel',
+        cName: 'nav-links'
     },
 ]
 

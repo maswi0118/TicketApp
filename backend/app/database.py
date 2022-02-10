@@ -3,7 +3,7 @@ from os import getenv
 import datetime
 from collections import defaultdict
 
-PAG_SIZE = 2
+PAG_SIZE = 6
 
 
 def connect():
@@ -290,10 +290,10 @@ def login_user(username: str, password: str) -> bool:
         print(e)
         cursor.close()
         db.close()
-        return False
+        return "false"
     cursor.close()
     db.close()
-    return password == db_password
+    return str(password == db_password)
 
 
 def add_ticket(uid: str, eid: str):

@@ -1,6 +1,5 @@
 import React from 'react';
 //API
-import SPOTIFY_API from'../SpotifyApi';
 //Config
 
 //Components
@@ -16,7 +15,9 @@ import { useHomeFetch } from "../hooks/useHomeFetch";
 import NoImage from '../images/noImage.png';
 
 const Home = () => {
-    const { state, loading, error, setSearchTerm } = useHomeFetch();
+    const { state, loading, error, setSearchTerm, setIsLoadingNext, setIsLoadingPrevious, pageNumber } = useHomeFetch();
+    const i = 0;
+
 
     console.log(state)
 
@@ -33,19 +34,28 @@ const Home = () => {
             ) : null }
             <SearchBar setSearchTerm={setSearchTerm}/>
             <Grid header='Incomming Events'>
-                {state != null ? state.artists.items.map(artist => (
+                {state.page.length > 0  ? state.page[pageNumber].map(event => (
                     <Thumb
-                        key={artist.id}
-                        clickable
-                        image={artist.images.length > 0 ? artist.images[0].url : NoImage}
-                        artistId={artist.id}
+                        key={event.eid}
+                        image={NoImage}
+                        artistName={event.artistName}
+                        eventName={event.name}
+                        date={event.date}
+                        price={event.price}
+                        genre={event.genre}
                     />
                 )) : null}
             </Grid>
-            <Spinner/>
-            <MoreButton text={'Load More'}/>
+            <h4>Page: {pageNumber}</h4>
+            {loading && <Spinner/>}
+            {state.page.length > pageNumber + 1 && !loading && (
+                <MoreButton text={'Next Page'} callback={() => setIsLoadingNext(true)}/>
+            )}
+            {pageNumber > 0 && !loading && (
+                <MoreButton text={'Previous Page'} callback={() => setIsLoadingPrevious(true)}/>
+            )}
         </>
     );
-}
+};
 
 export default Home;
