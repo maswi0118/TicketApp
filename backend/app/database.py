@@ -183,6 +183,7 @@ def add_event(name: str, date: datetime, price: int, location: str, artist: str)
 
 
 def get_events(name: str = None):
+    from math import ceil
     db = connect()
     cursor = db.cursor()
     if name:
@@ -207,7 +208,7 @@ def get_events(name: str = None):
             print(e)
             return False
     items = cursor.fetchall()
-    res = [[] for i in range(len(items) // PAG_SIZE)]
+    res = [[] for i in range(ceil(len(items)/PAG_SIZE))]
     i = 0
     for row in items:
         res[i // PAG_SIZE].append(
