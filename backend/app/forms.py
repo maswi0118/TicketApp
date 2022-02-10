@@ -1,12 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, BooleanField, TextAreaField, IntegerField, DecimalField, DateTimeLocalField
-
+from wtforms import StringField, SubmitField, SelectField, BooleanField, TextAreaField, IntegerField, \
+    DecimalField, DateTimeLocalField
 
 
 class AddCityForm(FlaskForm):
     city = StringField('Dodaj nowe miasto do bazy danych:')
     province = StringField('W jakim województwie znajduje się miasto?')
     submit = SubmitField('Zatwierdź')
+
 
 class AddLocationForm(FlaskForm):
     from .database import get_cities
@@ -17,6 +18,7 @@ class AddLocationForm(FlaskForm):
     indoor = BooleanField('Czy obiekt jest zadaszony?')
     submit = SubmitField('Zatwierdź')
 
+
 class AddArtistForm(FlaskForm):
     name = StringField('Jak nazywa się artysta?')
     genre = StringField('Jaki gatunek muzyczny wykonuje artysta?')
@@ -24,11 +26,11 @@ class AddArtistForm(FlaskForm):
     about = TextAreaField('Krótko opisz artyste')
     submit = SubmitField('Zatwierdź')
 
-#TODO fix date
+
 class AddEventForm(FlaskForm):
     from .database import get_artists, get_locations
     name = StringField('Jak nazywa się wydarzenie?')
-    date = DateTimeLocalField('Kiedy odbędzie się wydarzenie?')
+    date = DateTimeLocalField('Kiedy odbędzie się wydarzenie?', format='%Y-%m-%dT%H:%M')
     price = DecimalField('Ile będzie kosztował bilet na wydarzenie?')
     location = SelectField('W którym obiekcie będzie miało miejsce wydarzenie?', choices=get_locations())
     artist = SelectField('Jaki artysta wystąpi?', choices=get_artists())

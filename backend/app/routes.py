@@ -146,13 +146,14 @@ def add_event(city):
     form = AddEventForm()
     form.location.choices = get_locations(cid)
     if form.validate_on_submit():
+        print(form.date.data)
         if add(form.name.data, form.date.data, form.price.data, form.location.data, form.artist.data):
             flash(f'Poprawnie dodano wydarzenie {form.name.data}')
         else:
             flash(f'Nie udało dodać się wydarzenia {form.name.data}')
     return render_template('add_template.html', form=form)
 
-#TODO get events bez argumentu
+
 @app.route('/get_events/<name>')
 def get_events(name: str):
     from .database import get_events
@@ -165,7 +166,6 @@ def get_all_events():
     return json.dumps(get_events())
 
 
-# TODO zwracanie
 @app.route('/auth/register', methods=['POST'])
 def register():
     from .database import add_user
@@ -177,3 +177,10 @@ def register():
     phone_number = request.form.get('phone_number')
     return add_user(username, password, email, firstname, lastname, phone_number)
 
+
+@app.route('/auth/login', methods=['POST'])
+def login():
+    from .database import login_user
+    username = request.form.get('username')
+    password = request.form.get('password')
+    return login_user(username, password)

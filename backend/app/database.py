@@ -23,6 +23,8 @@ def add_city(city: str, province: str) -> bool:
     try:
         cursor.execute(sql, val)
     except:
+        cursor.close()
+        db.close()
         return False
     db.commit()
     res = cursor.rowcount == 1
@@ -70,6 +72,8 @@ def add_location(name: str, capacity: int, address: str, indoor: bool, city: str
         cursor.execute(sql, val)
         db.commit()
     except Exception as e:
+        cursor.close()
+        db.close()
         print(e)
         return False
     res = cursor.rowcount == 1
@@ -88,6 +92,8 @@ def add_artist(name: str, genre: str, nationality: str, about: str) -> bool:
         cursor.execute(sql, val)
         db.commit()
     except Exception as e:
+        cursor.close()
+        db.close()
         print(e)
         return False
     res = cursor.lastrowid
@@ -165,6 +171,8 @@ def add_event(name: str, date: datetime, price: int, location: str, artist: str)
         cursor.execute(sql, val)
         db.commit()
     except Exception as e:
+        cursor.close()
+        db.close()
         print(e)
         return False
     res = cursor.rowcount == 1
@@ -184,6 +192,8 @@ def get_events(name: str = None):
         try:
             cursor.execute(sql, val)
         except Exception as e:
+            cursor.close()
+            db.close()
             print(e)
             return False
     else:
@@ -253,8 +263,28 @@ def add_user(username: str, password: str, email: str, firstname: str, lastname:
         db.commit()
     except Exception as e:
         print(e)
+        cursor.close()
+        db.close()
         return False
     res = cursor.rowcount == 1
     cursor.close()
     db.close()
     return res
+
+
+def login_user(username: str, password: str) -> bool:
+    db = connect()
+    sql = 'SELECT password FROM users WHERE username = %s'
+    val = (username,)
+    cursor = db.cursor(buffered=True)
+    try:
+        cursor.execute(sql, val)
+        db_password, = cursor.fetchone()
+    except Exception as e:
+        print(e)
+        cursor.close()
+        db.close()
+        return False
+    cursor.close()
+    db.close()
+    return password == db_password
