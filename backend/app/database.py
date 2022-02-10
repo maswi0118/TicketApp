@@ -205,14 +205,13 @@ def get_events(name: str = None):
         except Exception as e:
             print(e)
             return False
-    res = defaultdict()
+    items = cursor.fetchall()
+    res = [[] for i in range(len(items))]
     i = 0
-    for row in cursor.fetchall():
-        if i//PAG_SIZE not in res.keys():
-            res[i//PAG_SIZE] = []
-        res[i//PAG_SIZE].append({'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
+    for row in items:
+        res[i//PAG_SIZE].append([{'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
                                  'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
-                                 'aid': row[9], 'artistName': row[10], 'genre': row[11], 'url': row[12]})
+                                 'aid': row[9], 'artistName': row[10], 'genre': row[11], 'url': row[12]}])
         i += 1
     cursor.close()
     db.close()
