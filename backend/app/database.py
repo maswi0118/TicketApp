@@ -363,6 +363,7 @@ def add_ticket(uid: str, eid: str):
 
 
 def get_tickets(uid: str):
+    from math import ceil
     db = connect()
     cursor = db.cursor()
     sql = """SELECT e.eid, e.name, e.date, e.maxAmount, e.sold, e.lid, e.income, e.soldout,
@@ -372,13 +373,14 @@ def get_tickets(uid: str):
     try:
         cursor.execute(sql, val)
     except Exception as e:
+        cursor.close()
+        db.close()
         print(e)
         return False
-    res = defaultdict()
+    items = cursor.fetchall()
+    res = [[] for i in range(ceil(len(items) / PAG_SIZE))]
     i = 0
-    for row in cursor.fetchall():
-        if i // PAG_SIZE not in res.keys():
-            res[i // PAG_SIZE] = []
+    for row in items:
         res[i // PAG_SIZE].append(
             {'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
              'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
