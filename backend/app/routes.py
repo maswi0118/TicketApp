@@ -277,7 +277,7 @@ def admin_register():
 @app.route('/add_money/<username>/<amount>')
 def add_money(username: str, amount: int):
     from .database import add_money
-    return str(add_money(username, amount))
+    return str(add_money(username, amount)).lower()
 
 
 @app.route('/delete_event', methods=['GET', 'POST'])
