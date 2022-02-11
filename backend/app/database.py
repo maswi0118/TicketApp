@@ -274,11 +274,11 @@ def add_user(username: str, password: str, email: str, firstname: str, lastname:
         print(e)
         cursor.close()
         db.close()
-        return False
+        return {'response': str(False)}
     res = cursor.rowcount == 1
     cursor.close()
     db.close()
-    return str(res).lower()
+    return {'response': str(res)}
 
 
 def login_user(username: str, password: str) -> bool:

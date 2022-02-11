@@ -1,5 +1,7 @@
 import base64
 import os
+
+import flask
 import requests
 from flask_cors import cross_origin
 from flask import render_template, flash, redirect, session
@@ -39,47 +41,6 @@ def page_not_found(e):
 def internal_server_error(e):
     # note that we set the 500 status explicitly
     return render_template('500.html'), 500
-
-
-@app.route('/artists/<name>')
-@cross_origin()
-def get_artists(name):
-    global token
-    try:
-        res = requests.get(
-            f'https://api.spotify.com/v1/search?q={name}&type=artist&limit=10&',
-            headers={
-                "Authorization": f"Bearer {token}"
-            }
-        )
-        if 399 < res.status_code < 500:
-            token = get_token()
-            res = requests.get(
-                f'https://api.spotify.com/v1/search?q={name}&type=artist&limit=10&',
-                headers={
-                    "Authorization": f"Bearer {token}"
-                }
-            )
-        return res.json()
-    except:
-        return "siema"
-
-
-def get_token():
-    message = os.getenv('CLIENT_ID') + ":" + os.getenv('CLIENT_SECRET')
-    message_bytes = message.encode('ascii')
-    base64_bytes = base64.b64encode(message_bytes)
-    base64_message = base64_bytes.decode('ascii')
-
-    res = requests.post(
-        'https://accounts.spotify.com/api/token',
-        headers={
-            "Authorization": f"Basic {base64_message}"
-        },
-        data={
-            "grant_type": "client_credentials"
-        })
-    return res.json().get('access_token')
 
 
 @app.route('/add_city', methods=['POST', 'GET'])
@@ -201,50 +162,6 @@ def add_event(city):
     return render_template('add_template.html', form=form)
 
 
-@app.route('/get_events/<name>')
-@cross_origin()
-def get_events(name: str):
-    from .database import get_events
-    return json.dumps(get_events(name))
-
-
-@app.route('/get_events/')
-@cross_origin()
-def get_all_events():
-    from .database import get_events
-    return json.dumps(get_events())
-
-
-@app.route('/auth/register/<username>/<password>/<email>/<firstname>/<lastname>/<phone_number>', methods=['GET'])
-@cross_origin()
-def register(username, password, email, firstname, lastname, phone_number):
-    from .database import add_user
-    return add_user(username, password, email, firstname, lastname, phone_number)
-
-
-@app.route('/auth/login/<username>/<password>', methods=['GET'])
-@cross_origin()
-def login(username, password):
-    from .database import login_user
-    return login_user(username, password)
-
-
-@app.route('/ticket/<eid>/<username>', methods=['GET'])
-@cross_origin()
-def ticket(eid: str, username: str):
-    from .database import add_ticket, get_uid
-    uid = get_uid(username)
-    return json.dumps(add_ticket(uid, eid))
-
-
-@app.route('/get_tickets/<username>')
-@cross_origin()
-def get_tickets(username: str):
-    from .database import get_tickets as get, get_uid
-    uid = get_uid(username)
-    return json.dumps(get(uid))
-
-
 @app.route('/login', methods=['POST', 'GET'])
 def admin_login():
     from .forms import LoginForm
@@ -310,3 +227,93 @@ def delete_artist():
         flash(f'Poprawnie usunięto {form.to_delete.data}')
         return redirect('/admin_panel')
     return render_template('add_template.html', form=form)
+
+# API
+
+@app.route('/get_events/<name>')
+@cross_origin()
+def get_events(name: str):
+    from .database import get_events as get
+    return json.dumps(get(name))
+
+
+@app.route('/get_events/')
+@cross_origin()
+def get_all_events():
+    from .database import get_events
+    response = flask.jsonify(get_events())
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
+@app.route('/auth/register/<username>/<password>/<email>/<firstname>/<lastname>/<phone_number>', methods=['POST', 'GET'])
+@cross_origin()
+def register(username, password, email, firstname, lastname, phone_number):
+    from .database import add_user
+    import hashlib
+    return add_user(username, hashlib.sha256(password.encode()).hexdigest(), email, firstname, lastname, phone_number)
+
+
+@app.route('/auth/login/<username>/<password>', methods=['GET'])
+@cross_origin()
+def login(username, password):
+    from .database import login_user
+    import hashlib
+    return login_user(username, hashlib.sha256(password.encode()).hexdigest())
+
+
+@app.route('/ticket/<eid>/<username>', methods=['GET'])
+@cross_origin()
+def ticket(eid: str, username: str):
+    from .database import add_ticket, get_uid
+    uid = get_uid(username)
+    return json.dumps(add_ticket(uid, eid))
+
+
+@app.route('/get_tickets/<username>')
+@cross_origin()
+def get_tickets(username: str):
+    from .database import get_tickets as get, get_uid
+    uid = get_uid(username)
+    return json.dumps(get(uid))
+
+
+@app.route('/artists/<name>')
+@cross_origin()
+def get_artists(name):
+    global token
+    try:
+        res = requests.get(
+            f'https://api.spotify.com/v1/search?q={name}&type=artist&limit=10&',
+            headers={
+                "Authorization": f"Bearer {token}"
+            }
+        )
+        if 399 < res.status_code < 500:
+            token = get_token()
+            res = requests.get(
+                f'https://api.spotify.com/v1/search?q={name}&type=artist&limit=10&',
+                headers={
+                    "Authorization": f"Bearer {token}"
+                }
+            )
+        return res.json()
+    except:
+        return "siema"
+
+
+def get_token():
+    message = os.getenv('CLIENT_ID') + ":" + os.getenv('CLIENT_SECRET')
+    message_bytes = message.encode('ascii')
+    base64_bytes = base64.b64encode(message_bytes)
+    base64_message = base64_bytes.decode('ascii')
+
+    res = requests.post(
+        'https://accounts.spotify.com/api/token',
+        headers={
+            "Authorization": f"Basic {base64_message}"
+        },
+        data={
+            "grant_type": "client_credentials"
+        })
+    return res.json().get('access_token')
