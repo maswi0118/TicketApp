@@ -6,7 +6,7 @@ const initialState = {
     page: []
 }
 
-export const useTickets = () => {
+export const useTicket = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [state, setState] = useState(initialState)
     const [loading, setLoading] = useState(false);
@@ -27,13 +27,13 @@ export const useTickets = () => {
         } catch (error) {
             setError(true);
         }
-        setLoading(false);
+        setLoading(false)
     };
 
     useEffect(()  => {
-
         fetchTickets()
     }, []);
+
     useEffect(() => {
         if (!isLoadingNext) return
         setPageNumber(pageNumber + 1)
@@ -47,5 +47,5 @@ export const useTickets = () => {
     }, [isLoadingPrevious, pageNumber]);
 
 
-    return { state, setIsLoading };
+    return { state, loading, error, setIsLoadingNext, setIsLoadingPrevious, pageNumber, setIsLoading };
 };

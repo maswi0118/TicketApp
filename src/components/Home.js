@@ -44,6 +44,7 @@ const Home = () => {
                         price={event.price}
                         genre={event.genre}
                         eid={event.eid}
+                        soldout={event.soldout}
                     />
                 )) : null}
             </Grid>

@@ -7,7 +7,7 @@ import Header from "./components/Header";
 import Home from "./components/Home";
 import Events from "./components/Events";
 import NotFound from "./components/NotFound/index";
-import Ticket from "./components/Ticket";
+import UserTickets from "./components/UserTickets";
 import Profile from "./components/Profile";
 
 
@@ -20,7 +20,7 @@ const App = () => (
         <Routes>
             <Route path='/' element={<Home/>}/>
             <Route path='/eventId' element={<Events/>}/>
-            <Route path='/tickets' element={<Ticket/>}/>
+            <Route path='/tickets' element={<UserTickets/>}/>
             <Route path='/profile' element={<Profile/>}/>
             <Route path='/*' element={<NotFound/>}/>
         </Routes>
