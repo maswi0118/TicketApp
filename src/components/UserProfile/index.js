@@ -21,7 +21,7 @@ function UserProfile() {
                 />
                 <Button text={'Transfer'} callback={() => setIsTransferring(true)}/>
             </Content>
-            <a href={"/profile"}><button type="submit" onClick={() => {localStorage.setItem("logged", "false")}}>wyloguj</button></a>
+            <a href={"/profile"}><button type="submit" onClick={() => {localStorage.setItem("logged", "false"); localStorage.removeItem("username")}}>Sign out</button></a>
         </Wrapper>
     )
 };

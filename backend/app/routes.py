@@ -1,7 +1,5 @@
 import base64
 import os
-
-import flask
 import requests
 from flask_cors import cross_origin
 from flask import render_template, flash, redirect, session
@@ -241,9 +239,7 @@ def get_events(name: str):
 @cross_origin()
 def get_all_events():
     from .database import get_events
-    response = flask.jsonify(get_events())
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
+    return json.dumps(get_events())
 
 
 @app.route('/auth/register/<username>/<password>/<email>/<firstname>/<lastname>/<phone_number>', methods=['POST', 'GET'])
@@ -259,7 +255,7 @@ def register(username, password, email, firstname, lastname, phone_number):
 def login(username, password):
     from .database import login_user
     import hashlib
-    return login_user(username, hashlib.sha256(password.encode()).hexdigest())
+    return {"response": login_user(username, hashlib.sha256(password.encode()).hexdigest())}
 
 
 @app.route('/ticket/<eid>/<username>', methods=['GET'])
