@@ -28,12 +28,13 @@ export const useRegister = () => {
             await setIsLogged(success);
 
             console.log(success)
-            if (success == "true") {
+            if (success.response == "True") {
                 await localStorage.setItem("logged", "true");
                 await localStorage.setItem("username", RUsername)
+                await alert("Signet up successfully!")
                 await window.location.reload();
             } else {
-
+                await alert("Something went wrong")
             }
 
         } catch (error) {

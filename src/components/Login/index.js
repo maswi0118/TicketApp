@@ -59,7 +59,7 @@ const Login = () => {
                     value={lastName}
                 />
                 <input
-                    type={"text"}
+                    type={"number"}
                     placeholder={'phone number'}
                     onChange={event => setPhoneNumber(event.currentTarget.value)}
                     value={phoneNumber}

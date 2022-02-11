@@ -5,7 +5,7 @@ import {usePurchase} from "../../hooks/usePurchase";
 import Button from "../Button";
 
 
-const Thumb = ({ image, eventName, artistName, date, genre, price, eid }) => {
+const Thumb = ({ image, eventName, artistName, date, genre, price, eid, soldout }) => {
         const { setIsPurchasing, setEid } = usePurchase();
         return(
             <div>
@@ -15,8 +15,12 @@ const Thumb = ({ image, eventName, artistName, date, genre, price, eid }) => {
                 <h4>{date}</h4>
                 <h4>{genre}</h4>
                 <h3>{price} PLN</h3>
-                <Button text={'Buy ticket'} callback={() => {setIsPurchasing(true); setEid(eid)}}/>
-        </div>
+                {soldout == 0 ?
+                    <Button text={'Buy ticket'} callback={() => {setIsPurchasing(true); setEid(eid)}}/> :
+                    <h4>sold out!</h4>
+                }
+
+            </div>
         )
 };
 
