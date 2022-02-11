@@ -68,3 +68,8 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Hasło', validators=[DataRequired(message='To pole nie może być puste'), Length(min=8, message='Hasło musi mieć przynajmniej 8 znaków'), Regexp(r'^[\w.@+-]+$', message='Hasło może zawierać znaki alfanumeryczne oraz .@+-')])
     password2 = PasswordField('Potwierdź hasło', validators=[DataRequired(message='To pole nie może być puste'), Length(min=8, message='Hasło musi mieć przynajmniej 8 znaków'), Regexp(r'^[\w.@+-]+$', message='Hasło może zawierać znaki alfanumeryczne oraz .@+-')])
     submit = SubmitField('Zatwierdź')
+
+
+class DeleteForm(FlaskForm):
+    to_delete = SelectField()
+    submit = SubmitField('Zatwierdź')

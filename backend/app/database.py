@@ -16,6 +16,7 @@ def connect():
         database='s403025'
     )
 
+
 def add_city(city: str, province: str) -> bool:
     db = connect()
     db.autocommit
@@ -123,14 +124,15 @@ def get_artists(aid: int = None) -> List[str]:
 
 def get_aid(name: str) -> int:
     db = connect()
-    sql = 'SELECT aid FROM artists WHERE name = %s;'
+    print(name)
+    sql = 'SELECT aid FROM artists WHERE name = %s'
     val = (name,)
     cursor = db.cursor(buffered=True)
     cursor.execute(sql, val)
-    res = cursor.fetchone()[0]
+    res = cursor.fetchone()
     cursor.close()
     db.close()
-    return res
+    return res[0]
 
 
 def get_locations(cid: int = None) -> List[str]:
@@ -209,14 +211,14 @@ def get_events(name: str = None):
             print(e)
             return False
     items = cursor.fetchall()
-    res = [[] for i in range(ceil(len(items)/PAG_SIZE))]
+    res = [[] for i in range(ceil(len(items) / PAG_SIZE))]
     i = 0
     for row in items:
         res[i // PAG_SIZE].append(
             {'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
-              'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
-              'aid': row[9], 'artistName': row[10], 'genre': row[11], 'url': row[12],
-              'price': row[13]})
+             'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
+             'aid': row[9], 'artistName': row[10], 'genre': row[11], 'url': row[12],
+             'price': row[13]})
         i += 1
     cursor.close()
     db.close()
@@ -439,11 +441,86 @@ def add_money(username: str, amount: float):
     cursor = db.cursor()
     sql = 'UPDATE users SET balance = balance + %s WHERE username = %s'
     val = (amount, username)
+    try:
+        cursor.execute(sql, val)
+    except Exception as e:
+        print(e)
+        cursor.close()
+        db.close()
+        return False
+    db.commit()
+    res = cursor.rowcount == 1
+    cursor.close()
+    db.close()
+    return res
+
+
+def delete_event(eid: str):
+    refund(eid)
+    db = connect()
+    cursor = db.cursor()
+    sql = 'DELETE FROM events WHERE eid = %s'
+    val = (eid,)
     cursor.execute(sql, val)
     db.commit()
     cursor.close()
     db.close()
 
 
-# def delete_event(eid: str):
-#
+def refund(eid: str):
+    db = connect()
+    cursor = db.cursor(buffered=True)
+    sql = 'SELECT uid FROM tickets WHERE eid = %s'
+    sql2 = 'UPDATE users SET balance = balance + (SELECT price FROM events WHERE eid = %s) WHERE id = %s'
+    sql3 = 'DELETE FROM tickets WHERE eid = %s'
+    val = (eid,)
+    cursor.execute(sql, val)
+    uids = [x[0] for x in cursor.fetchall()]
+    cursor.execute(sql3, val)
+    for uid in uids:
+        val2 = (eid, uid)
+        cursor.execute(sql2, val2)
+    db.commit()
+    db.close()
+    cursor.close()
+
+
+def get_events_names():
+    db = connect()
+    cursor = db.cursor()
+    sql = "SELECT name FROM events ORDER BY date"
+    cursor.execute(sql)
+    res = [x[0] for x in cursor.fetchall()]
+    db.close()
+    cursor.close()
+    return res
+
+
+def get_eid(name: str) -> str:
+    db = connect()
+    cursor = db.cursor(buffered=True)
+    sql = "SELECT eid FROM events WHERE name = %s"
+    val = (name,)
+    cursor.execute(sql, val)
+    res = cursor.fetchone()
+    db.close()
+    cursor.close()
+    return res[0]
+
+
+def delete_artist(name: str):
+    db = connect()
+    cursor = db.cursor()
+    aid = get_aid(name)
+    sql = "SELECT eid FROM events WHERE artists_aid = %s"
+    val = (aid,)
+    cursor.execute(sql, val)
+    eids = [x[0] for x in cursor.fetchall()]
+    for eid in eids:
+        delete_event(eid)
+    sql = 'DELETE FROM artists WHERE name = %s'
+    val = (name,)
+    cursor.execute(sql, val)
+    db.commit()
+    cursor.close()
+    db.close()

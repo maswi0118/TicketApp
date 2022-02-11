@@ -277,9 +277,36 @@ def admin_register():
 @app.route('/add_money/<username>/<amount>')
 def add_money(username: str, amount: int):
     from .database import add_money
-    add_money(username, amount)
+    return str(add_money(username, amount))
 
-#
-# @app.route('/delete_event')
-# def delete_event():
-#     from .database import
+
+@app.route('/delete_event', methods=['GET', 'POST'])
+def delete_event():
+    if is_not_logged():
+        return redirect('/login')
+    from .database import delete_event, get_events_names, get_eid
+    from .forms import DeleteForm
+    form = DeleteForm()
+    form.to_delete.choices = get_events_names()
+    form.to_delete.description= 'Wybierz event do usunięcia'
+    if form.validate_on_submit():
+        delete_event(get_eid(form.to_delete.data))
+        flash(f'Poprawnie usunięto {form.to_delete.data}')
+        return redirect('/admin_panel')
+    return render_template('add_template.html', form=form)
+
+
+@app.route('/delete_artist', methods=['GET', 'POST'])
+def delete_artist():
+    if is_not_logged():
+        return redirect('/login')
+    from .database import get_artists, delete_artist
+    from .forms import DeleteForm
+    form = DeleteForm()
+    form.to_delete.choices = get_artists()
+    form.to_delete.description= 'Wybierz artyste do usunięcia np. Sobela'
+    if form.validate_on_submit():
+        delete_artist(form.to_delete.data)
+        flash(f'Poprawnie usunięto {form.to_delete.data}')
+        return redirect('/admin_panel')
+    return render_template('add_template.html', form=form)
