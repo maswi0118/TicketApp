@@ -549,7 +549,7 @@ def check_if_is_over():
 def get_balance(uid: str):
     db = connect()
     cursor = db.cursor()
-    sql = "SELECT balance FROM users WHERE id = %s"
+    sql = "SELECT balance, email, phone_number FROM users WHERE id = %s"
     val = (uid,)
     cursor.execute(sql, val)
     res = cursor.fetchone()
@@ -558,4 +558,4 @@ def get_balance(uid: str):
     db.commit()
     cursor.close()
     db.close()
-    return res[0]
+    return res

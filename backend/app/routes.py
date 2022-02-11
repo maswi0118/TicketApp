@@ -322,4 +322,5 @@ def get_token():
 @cross_origin()
 def get_balance(username: str):
     from .database import get_uid, get_balance
-    return {'balance': get_balance(get_uid(username))}
+    data = get_balance(get_uid(username))
+    return {'balance': data[0], 'email': data[1], 'phone': data[2]}
