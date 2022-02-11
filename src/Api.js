@@ -25,6 +25,9 @@ export default {
     }
   },
   fetchPurchase: async (eid) => {
+    if (localStorage.getItem("logged") != "true" ) {
+      return false
+    }
     const endpoint = 'http://127.0.0.1:5000/ticket/' + eid + "/" + localStorage.getItem("username")
     return await (await fetch(endpoint)).json();
   },
