@@ -6,11 +6,20 @@ from flask import render_template, flash, redirect, session
 from . import app
 import json
 import hashlib
+
 token = ''
 
 
 def is_not_logged():
     return 'username' not in session.keys()
+
+
+@app.route('/')
+def index():
+    if is_not_logged():
+        return redirect('/login')
+    else:
+        return redirect('/admin_panel')
 
 
 @app.route('/admin_panel', methods=['POST', 'GET'])
@@ -30,6 +39,7 @@ def page_not_found(e):
 def internal_server_error(e):
     # note that we set the 500 status explicitly
     return render_template('500.html'), 500
+
 
 @app.route('/artists/<name>')
 @cross_origin()
@@ -89,11 +99,13 @@ def add_city():
 
 @app.route('/add_location', methods=['POST', 'GET'])
 def add_location():
+    from .database import get_cities
     if is_not_logged():
         return redirect('/login')
     from .forms import AddLocationForm
     from .database import add_location as add
     form = AddLocationForm()
+    form.city.choices = get_cities()
     if form.validate_on_submit():
         if add(form.name.data, form.capacity.data, form.address.data, form.indoor.data, form.city.data):
             flash(f'Poprawnie dodano: {form.name.data}, {form.address.data}.')
@@ -149,7 +161,9 @@ def add_event_province():
     if is_not_logged():
         return redirect('/login')
     from .forms import SelectProvince
+    from .database import get_districts
     form = SelectProvince()
+    form.province = get_districts()
     if form.validate_on_submit():
         return redirect(f'/add_event_city/{form.province.data}')
     return render_template('add_template.html', form=form)
@@ -170,6 +184,7 @@ def add_event_city(province):
 
 @app.route('/add_event/<city>', methods=['POST', 'GET'])
 def add_event(city):
+    from .database import get_artists, get_locations
     if is_not_logged():
         return redirect('/login')
     from .forms import AddEventForm
@@ -177,6 +192,7 @@ def add_event(city):
     cid = get_cid(city)
     form = AddEventForm()
     form.location.choices = get_locations(cid)
+    form.artist = get_artists()
     if form.validate_on_submit():
         if add(form.name.data, form.date.data, form.price.data, form.location.data, form.artist.data):
             flash(f'Poprawnie dodano wydarzenie {form.name.data}')
@@ -218,7 +234,7 @@ def login(username, password):
 def ticket(eid: str, username: str):
     from .database import add_ticket, get_uid
     uid = get_uid(username)
-    return add_ticket(uid, eid)
+    return json.dumps(add_ticket(uid, eid))
 
 
 @app.route('/get_tickets/<uid>')
@@ -257,4 +273,7 @@ def admin_register():
     return render_template('add_template.html', form=form)
 
 
-#TODO: pieniądze doładowanie i stan
+@app.route('/add_money/<username>/<amount>')
+def add_money(username: str, amount: int):
+    from .database import add_money
+    add_money(username, amount)

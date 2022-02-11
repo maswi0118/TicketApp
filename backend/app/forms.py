@@ -13,9 +13,8 @@ class AddCityForm(FlaskForm):
 
 
 class AddLocationForm(FlaskForm):
-    from .database import get_cities
     name = StringField('Jak nazywa się obiekt?', validators=[DataRequired(message='To pole nie może być puste')])
-    city = SelectField('Wybierz miasto w którym znajduje się ten obiekt:', choices=get_cities())
+    city = SelectField('Wybierz miasto w którym znajduje się ten obiekt:')
     capacity = IntegerField('Jaka jest maksymalna pojemność tego obiektu?', validators=[DataRequired(message='To pole nie może być puste'), NumberRange(min=0, message='Pojemność nie może być ujemna')])
     address = TextAreaField('Jaki jest dokładny adres obiektu?', validators=[DataRequired(message='To pole nie może być puste')])
     indoor = BooleanField('Czy obiekt jest zadaszony?')
@@ -31,12 +30,11 @@ class AddArtistForm(FlaskForm):
 
 
 class AddEventForm(FlaskForm):
-    from .database import get_artists, get_locations
     name = StringField('Jak nazywa się wydarzenie?', validators=[DataRequired(message='To pole nie może być puste')])
     date = DateTimeLocalField('Kiedy odbędzie się wydarzenie?', format='%Y-%m-%dT%H:%M', validators=[DataRequired(message='To pole nie może być puste')])
     price = DecimalField('Ile będzie kosztował bilet na wydarzenie?', validators=[DataRequired(message='To pole nie może być puste'), NumberRange(min=0, message='Cena nie może być ujemna')])
-    location = SelectField('W którym obiekcie będzie miało miejsce wydarzenie?', choices=get_locations())
-    artist = SelectField('Jaki artysta wystąpi?', choices=get_artists())
+    location = SelectField('W którym obiekcie będzie miało miejsce wydarzenie?')
+    artist = SelectField('Jaki artysta wystąpi?')
     submit = SubmitField('Zatwierdź')
 
     def validate_date(self, field):
@@ -45,8 +43,7 @@ class AddEventForm(FlaskForm):
 
 
 class SelectProvince(FlaskForm):
-    from .database import get_districts
-    province = SelectField('Wybierz województwo', choices=get_districts())
+    province = SelectField('Wybierz województwo')
     submit = SubmitField('Zatwierdź')
 
 

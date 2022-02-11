@@ -11,8 +11,8 @@ PAG_SIZE = 6
 def connect():
     return mysql.connector.connect(
         host='127.0.0.1',
-        user='macius',
-        password='siema',
+        user='root',
+        password='123456789',
         database='s403025'
     )
 
@@ -291,7 +291,7 @@ def login_user(username: str, password: str) -> bool:
         print(e)
         cursor.close()
         db.close()
-        return "false"
+        return str(False)
     cursor.close()
     db.close()
     return str(password == db_password)
@@ -299,24 +299,48 @@ def login_user(username: str, password: str) -> bool:
 
 def add_ticket(uid: str, eid: str):
     db = connect()
-    sql = "INSERT INTO tickets(uid, eid) VALUES (%s, %s)"
-    sql2 = "UPDATE events SET sold = sold + 1 WHERE eid = %s"
-    cursor = db.cursor()
-    val = (uid, eid)
-    val2 = (eid,)
+    cursor = db.cursor(buffered=True)
+    sql = "SELECT balance FROM users WHERE id = %s"
     try:
-        cursor.execute(sql2, val2)
-        cursor.execute(sql, val)
-        db.commit()
+        cursor.execute(sql, (uid,))
     except Exception as e:
         print(e)
         cursor.close()
         db.close()
         return False
-    res = cursor.lastrowid
-    cursor.close()
-    db.close()
-    return res
+    balance = cursor.fetchone()[0]
+    sql = "SELECT price FROM events WHERE eid = %s"
+    try:
+        cursor.execute(sql, (eid,))
+    except Exception as e:
+        print(e)
+        cursor.close()
+        db.close()
+        return False
+    price = cursor.fetchone()[0]
+    if balance < price:
+        return False
+    else:
+        sql = "INSERT INTO tickets(uid, eid) VALUES (%s, %s)"
+        sql2 = "UPDATE events SET sold = sold + 1 WHERE eid = %s"
+        sql3 = "UPDATE users SET balance = balance - (SELECT price FROM events WHERE eid = %s) WHERE id = %s"
+        val = (uid, eid)
+        val2 = (eid,)
+        val3 = (eid, uid)
+        try:
+            cursor.execute(sql2, val2)
+            cursor.execute(sql3, val3)
+            cursor.execute(sql, val)
+            db.commit()
+        except Exception as e:
+            print(e)
+            cursor.close()
+            db.close()
+            return False
+        res = cursor.lastrowid
+        cursor.close()
+        db.close()
+        return res
 
 
 def get_tickets(uid: str):
@@ -346,7 +370,7 @@ def get_tickets(uid: str):
     return {'page': res}
 
 
-def get_admin(login: str):
+def get_admin(login: str) -> tuple:
     db = connect()
     cursor = db.cursor(buffered=True)
     sql = "SELECT * FROM admins WHERE login = %s"
@@ -380,7 +404,7 @@ def add_admin(login: str, password: str):
 def get_uid(username: str) -> str:
     db = connect()
     cursor = db.cursor(buffered=True)
-    sql = "SELECT uid FROM users WHERE username = %s"
+    sql = "SELECT id FROM users WHERE username = %s"
     val = (username,)
     try:
         cursor.execute(sql, val)
@@ -391,3 +415,14 @@ def get_uid(username: str) -> str:
     cursor.close()
     db.close()
     return res[0]
+
+
+def add_money(username: str, amount: float):
+    db = connect()
+    cursor = db.cursor()
+    sql = 'UPDATE users SET balance = balance + %s WHERE username = %s'
+    val = (amount, username)
+    cursor.execute(sql, val)
+    db.commit()
+    cursor.close()
+    db.close()
