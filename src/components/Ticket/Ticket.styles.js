@@ -29,6 +29,6 @@ export const Image = styled.img`
   }
 `;
 
-export const Details = styled.a`
-
+export const Details = styled.div`
+  text-align: center;
 `;

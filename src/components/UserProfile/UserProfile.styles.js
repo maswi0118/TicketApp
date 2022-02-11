@@ -5,7 +5,6 @@ export const Wrapper = styled.div`
       padding-top: 200px;
       justify-content: space-around;
       display: flex;
-      direction: column;
 `;
 
 export const Logout = styled.a`
@@ -23,6 +22,7 @@ export const Content = styled.div`
     justify-content: center;
     align-items: center;
     padding: 20px;
+    text-align: center;
     
     button {
       width: 200px;

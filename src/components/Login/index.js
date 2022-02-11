@@ -12,7 +12,6 @@ const Login = () => {
         <Wrapper>
             <Content>
                 <h1>Sign in!</h1>
-<<<<<<< HEAD
                 <Block>
                     <input
                         type={"text"}
@@ -28,23 +27,6 @@ const Login = () => {
                     />
                     <MoreButton text={'Sign in'} callback={() => setIsLogging(true)}/>
                 </Block>
-=======
-                <input
-                    type={"text"}
-                    placeholder={'username'}
-                    onChange={event => setUsername(event.currentTarget.value)}
-                    value={username}
-                    required
-                />
-                <input
-                    type={"password"}
-                    placeholder={'password'}
-                    onChange={event => setPassword(event.currentTarget.value)}
-                    value={password}
-                    required
-                />
-                <MoreButton text={'Sign in'} callback={() => setIsLogging(true)}/>
->>>>>>> 566aff7900020899c4f0603c37c43c07d13a8f77
             </Content>
             <ContentRegister>
                 <h1>Sign up!</h1>

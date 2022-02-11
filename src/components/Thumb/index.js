@@ -1,6 +1,6 @@
 import React from 'react';
 // Styles
-import { Image } from './Thumb.styles';
+import { Image, Details } from './Thumb.styles';
 import {usePurchase} from "../../hooks/usePurchase";
 import Button from "../Button";
 
@@ -8,7 +8,7 @@ import Button from "../Button";
 const Thumb = ({ image, eventName, artistName, date, genre, price, eid, soldout, city, location }) => {
         const { setIsPurchasing, setEid } = usePurchase();
         return(
-            <div>
+            <Details>
                 <Image src={image} alt='artist-Thumb'/>
                 <h3>{eventName}</h3>
                 <h3>{artistName}</h3>
@@ -22,7 +22,7 @@ const Thumb = ({ image, eventName, artistName, date, genre, price, eid, soldout,
                     <h4>sold out!</h4>
                 }
 
-            </div>
+            </Details>
         )
 };
 

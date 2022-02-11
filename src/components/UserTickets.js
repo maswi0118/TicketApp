@@ -29,6 +29,8 @@ const UserTickets = () => {
                                 date={event.date}
                                 genre={event.genre}
                                 id={event.tid}
+                                city={event.city}
+                                location={event.location}
                             />
                         )) : null}
                     </Grid>
