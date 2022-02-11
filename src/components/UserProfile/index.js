@@ -2,18 +2,21 @@ import React from 'react'
 import {Wrapper, Content, Logout} from './UserProfile.styles'
 import Button from "../Button";
 import {useAddMoney} from "../../hooks/useAddMoney";
+import {useBalance} from "../../hooks/useBalance";
 
 function UserProfile() {
     const { setIsTransferring, amount, setAmount } = useAddMoney()
+    const { state } = useBalance()
 
     return (
         <Wrapper>
             <Content>
-                <a>zalogowany?: tak</a>
+                <a>Welcome {localStorage.getItem("username")}!</a>
             </Content>
             <Content>
                 <div class>
                     <h3>Add Money</h3>
+                    <h5>Balance: {state.balance} PLN</h5>
                     <input
                         type={"number"}
                         placeholder={'amount'}

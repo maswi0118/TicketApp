@@ -17,12 +17,14 @@ const Login = () => {
                     placeholder={'username'}
                     onChange={event => setUsername(event.currentTarget.value)}
                     value={username}
+                    required
                 />
                 <input
                     type={"password"}
                     placeholder={'password'}
                     onChange={event => setPassword(event.currentTarget.value)}
                     value={password}
+                    required
                 />
                 <MoreButton text={'Sign in'} callback={() => setIsLogging(true)}/>
             </Content>
@@ -33,36 +35,43 @@ const Login = () => {
                     placeholder={'username'}
                     onChange={event => setRUsername(event.currentTarget.value)}
                     value={RUsername}
+                    required
                 />
                 <input
                     type={"password"}
                     placeholder={'password'}
                     onChange={event => setRPassword(event.currentTarget.value)}
                     value={RPassword}
+                    required
                 />
                 <input
                     type={"text"}
                     placeholder={'email'}
                     onChange={event => setEmail(event.currentTarget.value)}
                     value={email}
+                    required
                 />
                 <input
                     type={"text"}
                     placeholder={'first name'}
                     onChange={event => setFirstName(event.currentTarget.value)}
                     value={firstName}
+                    required
                 />
                 <input
                     type={"text"}
                     placeholder={'last name'}
                     onChange={event => setLastName(event.currentTarget.value)}
                     value={lastName}
+                    required
                 />
                 <input
-                    type={"number"}
+                    type={"text"}
                     placeholder={'phone number'}
                     onChange={event => setPhoneNumber(event.currentTarget.value)}
                     value={phoneNumber}
+                    required
+                    pattern="[0-9]{9}"
                 />
                 <MoreButton text={'Sign Up'} callback={() => setIsRegistering(true)}/>
             </Content>
