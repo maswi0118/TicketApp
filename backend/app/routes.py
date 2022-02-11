@@ -1,11 +1,13 @@
 import base64
-import os
-import requests
-from flask_cors import cross_origin
-from flask import render_template, flash, redirect, session
-from . import app
-import json
 import hashlib
+import json
+import os
+
+import requests
+from flask import render_template, flash, redirect, session
+from flask_cors import cross_origin
+
+from . import app
 
 token = ''
 
@@ -143,7 +145,7 @@ def add_event_city(province):
 
 @app.route('/add_event/<city>', methods=['POST', 'GET'])
 def add_event(city):
-    from .database import get_artists, get_locations
+    from .database import get_artists
     if is_not_logged():
         return redirect('/login')
     from .forms import AddEventForm
@@ -203,7 +205,7 @@ def delete_event():
     from .forms import DeleteForm
     form = DeleteForm()
     form.to_delete.choices = get_events_names()
-    form.to_delete.description= 'Wybierz event do usunięcia'
+    form.to_delete.description = 'Wybierz event do usunięcia'
     if form.validate_on_submit():
         delete_event(get_eid(form.to_delete.data))
         flash(f'Poprawnie usunięto {form.to_delete.data}')
@@ -219,12 +221,13 @@ def delete_artist():
     from .forms import DeleteForm
     form = DeleteForm()
     form.to_delete.choices = get_artists()
-    form.to_delete.description= 'Wybierz artyste do usunięcia np. Sobela'
+    form.to_delete.description = 'Wybierz artyste do usunięcia np. Sobela'
     if form.validate_on_submit():
         delete_artist(form.to_delete.data)
         flash(f'Poprawnie usunięto {form.to_delete.data}')
         return redirect('/admin_panel')
     return render_template('add_template.html', form=form)
+
 
 # API
 
@@ -242,7 +245,8 @@ def get_all_events():
     return json.dumps(get_events())
 
 
-@app.route('/auth/register/<username>/<password>/<email>/<firstname>/<lastname>/<phone_number>', methods=['POST', 'GET'])
+@app.route('/auth/register/<username>/<password>/<email>/<firstname>/<lastname>/<phone_number>',
+           methods=['POST', 'GET'])
 @cross_origin()
 def register(username, password, email, firstname, lastname, phone_number):
     from .database import add_user

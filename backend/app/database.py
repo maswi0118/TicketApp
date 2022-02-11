@@ -1,9 +1,7 @@
-import mysql.connector
-from os import getenv
 import datetime
-from collections import defaultdict
-
 from typing import List
+
+import mysql.connector
 
 PAG_SIZE = 6
 
@@ -523,6 +521,23 @@ def delete_artist(name: str):
     sql = 'DELETE FROM artists WHERE name = %s'
     val = (name,)
     cursor.execute(sql, val)
+    db.commit()
+    cursor.close()
+    db.close()
+
+
+def check_if_is_over():
+    db = connect()
+    cursor = db.cursor()
+    sql = "SELECT eid FROM events WHERE date < %s AND isOver = 0"
+    val = (datetime.datetime.now(), )
+    cursor.execute(sql, val)
+    eids = [x[0] for x in cursor.fetchall()]
+    print(eids)
+    sql = 'UPDATE events SET isOver = 1 WHERE eid = %s'
+    for eid in eids:
+        val = (eid, )
+        cursor.execute(sql, val)
     db.commit()
     cursor.close()
     db.close()
