@@ -37,7 +37,7 @@ const Home = () => {
                 {state.page.length > 0  ? state.page[pageNumber].map(event => (
                     <Thumb
                         key={event.eid}
-                        image={NoImage}
+                        image={event.url}
                         artistName={event.artistName}
                         eventName={event.name}
                         date={event.date}

@@ -189,9 +189,11 @@ def get_events(name: str = None):
     cursor = db.cursor()
     if name:
         sql = """SELECT e.eid, e.name, e.date, e.maxAmount, e.sold, e.lid, e.income, e.soldout,
-              e.isOver, e.artists_aid, a.name, a.genre, a.photolink, e.price FROM events e, artists a 
-              WHERE e.artists_aid = a.aid AND (e.name LIKE %s OR a.name LIKE %s) AND e.isOver = 0 ORDER BY e.date"""
-        val = (f'%{name}%', f'%{name}%')
+              e.isOver, e.artists_aid, a.name, a.genre, a.photolink, e.price, l.name, c.city 
+              FROM events e, artists a , locations l, cities c WHERE e.artists_aid = a.aid 
+              AND e.lid = l.lid AND l.cid = c.cid AND 
+              (e.name LIKE %s OR a.name LIKE %s OR c.city LIKE %s) AND e.isOver = 0 ORDER BY e.date"""
+        val = (f'%{name}%', f'%{name}%', f'%{name}%')
         try:
             cursor.execute(sql, val)
         except Exception as e:
@@ -201,8 +203,9 @@ def get_events(name: str = None):
             return False
     else:
         sql = """SELECT e.eid, e.name, e.date, e.maxAmount, e.sold, e.lid, e.income, e.soldout,
-                      e.isOver, e.artists_aid, a.name, a.genre, a.photolink, e.price FROM events e, artists a 
-                      WHERE e.artists_aid = a.aid AND e.isOver = 0 ORDER BY e.date"""
+              e.isOver, e.artists_aid, a.name, a.genre, a.photolink, e.price, l.name, c.city FROM events e, artists a, 
+              locations l, cities c WHERE e.artists_aid = a.aid AND e.lid = l.lid AND l.cid = c.cid
+              AND e.isOver = 0 ORDER BY e.date"""
         try:
             cursor.execute(sql)
         except Exception as e:
@@ -216,7 +219,7 @@ def get_events(name: str = None):
             {'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
              'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
              'aid': row[9], 'artistName': row[10], 'genre': row[11], 'url': row[12],
-             'price': row[13]})
+             'price': row[13], 'location': row[14], 'city': row[15]})
         i += 1
     cursor.close()
     db.close()

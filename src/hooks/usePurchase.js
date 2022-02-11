@@ -26,7 +26,7 @@ export const usePurchase = () => {
             if (success != false ) {
                 await alert("Ticked purchased successfully")
             } else {
-                await alert("Something went wrong")
+                await alert("Something went wrong, recharge your account or sign in")
             }
 
         } catch (error) {
