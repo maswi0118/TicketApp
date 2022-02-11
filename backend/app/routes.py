@@ -317,3 +317,9 @@ def get_token():
             "grant_type": "client_credentials"
         })
     return res.json().get('access_token')
+
+@app.route('/get_balance/<username>')
+@cross_origin()
+def get_balance(username: str):
+    from .database import get_uid, get_balance
+    return {'balance': get_balance(get_uid(username))}
