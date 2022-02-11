@@ -23,7 +23,7 @@ const UserTickets = () => {
                         {state.page.length > 0  ? state.page[pageNumber].map(event => (
                             <Ticket
                                 key={event.tid}
-                                image={NoImage}
+                                image={event.url}
                                 artistName={event.artistName}
                                 eventName={event.name}
                                 date={event.date}

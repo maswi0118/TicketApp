@@ -9,6 +9,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Content = styled.div`
+<<<<<<< HEAD
     padding: 20px 20px 20px 20px;
     margin-bottom: 50px;
     display: flex;
@@ -49,4 +50,13 @@ export const ContentRegister = styled.div`
 
 export const Container = styled.div`
     width: 500px;
+=======
+    button {
+      width: 200px;
+    }
+      input:invalid {
+      border-color: red;
+    }
+
+>>>>>>> 566aff7900020899c4f0603c37c43c07d13a8f77
 `;

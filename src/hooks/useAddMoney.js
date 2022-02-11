@@ -26,6 +26,7 @@ export const useAddMoney = () => {
             console.log(success)
             if (success == true ) {
                 await alert("Money transferred successfully!")
+                await window.location.reload();
             } else {
                 await alert("Something went wrong")
             }

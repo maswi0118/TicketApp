@@ -38,5 +38,12 @@ export default {
   fetchTickets: async () => {
     const endpoint = 'http://127.0.0.1:5000/get_tickets/' + localStorage.getItem("username")
     return await (await fetch(endpoint)).json();
+  },
+  fetchBalance: async () => {
+    if (localStorage.getItem("logged") != "true") {
+      return false
+    }
+    const endpoint = 'http://127.0.0.1:5000/get_balance/' + localStorage.getItem("username")
+    return await (await fetch(endpoint)).json();
   }
 }
