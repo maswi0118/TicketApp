@@ -213,10 +213,11 @@ def login(username, password):
     return login_user(username, password)
 
 
-@app.route('/ticket/<eid>/<uid>', methods=['GET'])
+@app.route('/ticket/<eid>/<username>', methods=['GET'])
 @cross_origin()
-def ticket(eid: str, uid: str):
-    from .database import add_ticket
+def ticket(eid: str, username: str):
+    from .database import add_ticket, get_uid
+    uid = get_uid(username)
     return add_ticket(uid, eid)
 
 
@@ -256,3 +257,4 @@ def admin_register():
     return render_template('add_template.html', form=form)
 
 
+#TODO: pieniądze doładowanie i stan

@@ -348,7 +348,7 @@ def get_tickets(uid: str):
 
 def get_admin(login: str):
     db = connect()
-    cursor = db.cursor()
+    cursor = db.cursor(buffered=True)
     sql = "SELECT * FROM admins WHERE login = %s"
     val = (login,)
     try:
@@ -375,3 +375,19 @@ def add_admin(login: str, password: str):
     db.commit()
     cursor.close()
     db.close()
+
+
+def get_uid(username: str) -> str:
+    db = connect()
+    cursor = db.cursor(buffered=True)
+    sql = "SELECT uid FROM users WHERE username = %s"
+    val = (username,)
+    try:
+        cursor.execute(sql, val)
+    except Exception as e:
+        print(e)
+        return False
+    res = cursor.fetchone()
+    cursor.close()
+    db.close()
+    return res[0]
