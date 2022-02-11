@@ -1,5 +1,5 @@
 import API from "../../Api"
-import {Wrapper, Content} from "./Login.styles";
+import {Wrapper, Content, Block, ContentRegister, Container} from "./Login.styles";
 import {useEffect, useState} from "react";
 import MoreButton from "../MoreButton";
 import { useLogin } from "../../hooks/useLogin"
@@ -12,22 +12,25 @@ const Login = () => {
         <Wrapper>
             <Content>
                 <h1>Sign in!</h1>
-                <input
-                    type={"text"}
-                    placeholder={'username'}
-                    onChange={event => setUsername(event.currentTarget.value)}
-                    value={username}
-                />
-                <input
-                    type={"password"}
-                    placeholder={'password'}
-                    onChange={event => setPassword(event.currentTarget.value)}
-                    value={password}
-                />
-                <MoreButton text={'Sign in'} callback={() => setIsLogging(true)}/>
+                <Block>
+                    <input
+                        type={"text"}
+                        placeholder={'username'}
+                        onChange={event => setUsername(event.currentTarget.value)}
+                        value={username}
+                    />
+                    <input
+                        type={"password"}
+                        placeholder={'password'}
+                        onChange={event => setPassword(event.currentTarget.value)}
+                        value={password}
+                    />
+                    <MoreButton text={'Sign in'} callback={() => setIsLogging(true)}/>
+                </Block>
             </Content>
-            <Content>
+            <ContentRegister>
                 <h1>Sign up!</h1>
+                <Block>
                 <input
                     type={"text"}
                     placeholder={'username'}
@@ -65,7 +68,8 @@ const Login = () => {
                     value={phoneNumber}
                 />
                 <MoreButton text={'Sign Up'} callback={() => setIsRegistering(true)}/>
-            </Content>
+                </Block>
+            </ContentRegister>
         </Wrapper>
     )
 }
