@@ -190,7 +190,7 @@ def get_events(name: str = None):
     if name:
         sql = """SELECT e.eid, e.name, e.date, e.maxAmount, e.sold, e.lid, e.income, e.soldout,
               e.isOver, e.artists_aid, a.name, a.genre, a.photolink, e.price FROM events e, artists a 
-              WHERE e.artists_aid = a.aid AND (e.name LIKE %s OR a.name LIKE %s) ORDER BY e.date"""
+              WHERE e.artists_aid = a.aid AND (e.name LIKE %s OR a.name LIKE %s) AND e.isOver = 0 ORDER BY e.date"""
         val = (f'%{name}%', f'%{name}%')
         try:
             cursor.execute(sql, val)
@@ -202,7 +202,7 @@ def get_events(name: str = None):
     else:
         sql = """SELECT e.eid, e.name, e.date, e.maxAmount, e.sold, e.lid, e.income, e.soldout,
                       e.isOver, e.artists_aid, a.name, a.genre, a.photolink, e.price FROM events e, artists a 
-                      WHERE e.artists_aid = a.aid ORDER BY e.date"""
+                      WHERE e.artists_aid = a.aid AND e.isOver = 0 ORDER BY e.date"""
         try:
             cursor.execute(sql)
         except Exception as e:
@@ -365,7 +365,7 @@ def get_tickets(uid: str):
     db = connect()
     cursor = db.cursor()
     sql = """SELECT e.eid, e.name, e.date, e.maxAmount, e.sold, e.lid, e.income, e.soldout,
-                     e.isOver, e.artists_aid, a.name, a.genre, a.photolink FROM events e, artists a, tickets t 
+                     e.isOver, e.artists_aid, a.name, a.genre, a.photolink, t.tid FROM events e, artists a, tickets t 
                      WHERE e.artists_aid = a.aid AND t.eid = e.eid AND t.uid = %s ORDER BY e.date"""
     val = (uid,)
     try:
@@ -382,7 +382,7 @@ def get_tickets(uid: str):
         res[i // PAG_SIZE].append(
             {'eid': row[0], 'name': row[1], 'date': row[2].strftime("%Y/%m/%d"), 'maxAmount': row[3],
              'sold': row[4], 'lid': row[5], 'income': row[6], 'soldout': row[7], 'isOver': row[8],
-             'aid': row[9], 'artistName': row[10], 'genre': row[11], 'url': row[12]})
+             'aid': row[9], 'artistName': row[10], 'genre': row[11], 'url': row[12], 'tid': row[13]})
         i += 1
     cursor.close()
     db.close()
