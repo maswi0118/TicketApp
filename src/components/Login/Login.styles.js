@@ -4,8 +4,14 @@ export const Wrapper = styled.div`
   position: center;
   padding-top: 200px;
   text-align: center;
+  margin-right: 200px;
+  margin-left: 200px;
   h1 {
     color: var(--darkGray);
+  }
+  @media screen and (max-width: 720px) {
+    margin-left: 20px;
+    margin-right: 20px;
   }
 `;
 
