@@ -237,10 +237,11 @@ def ticket(eid: str, username: str):
     return json.dumps(add_ticket(uid, eid))
 
 
-@app.route('/get_tickets/<uid>')
+@app.route('/get_tickets/<username>')
 @cross_origin()
-def get_tickets(uid: str):
-    from .database import get_tickets as get
+def get_tickets(username: str):
+    from .database import get_tickets as get, get_uid
+    uid = get_uid(username)
     return json.dumps(get(uid))
 
 
@@ -277,3 +278,8 @@ def admin_register():
 def add_money(username: str, amount: int):
     from .database import add_money
     add_money(username, amount)
+
+#
+# @app.route('/delete_event')
+# def delete_event():
+#     from .database import

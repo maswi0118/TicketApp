@@ -297,6 +297,23 @@ def login_user(username: str, password: str) -> bool:
     return str(password == db_password)
 
 
+def is_soldout(eid: str) -> bool:
+    db = connect()
+    cursor = db.cursor(buffered=True)
+    sql = "SELECT isOver FROM events WHERE eid = %s"
+    try:
+        cursor.execute(sql, (eid,))
+    except Exception as e:
+        print(e)
+        cursor.close()
+        db.close()
+        return False
+    res = bool(cursor.fetchone()[0])
+    cursor.close()
+    db.close()
+    return res
+
+
 def add_ticket(uid: str, eid: str):
     db = connect()
     cursor = db.cursor(buffered=True)
@@ -318,7 +335,7 @@ def add_ticket(uid: str, eid: str):
         db.close()
         return False
     price = cursor.fetchone()[0]
-    if balance < price:
+    if balance < price or is_soldout(eid):
         return False
     else:
         sql = "INSERT INTO tickets(uid, eid) VALUES (%s, %s)"
@@ -426,3 +443,7 @@ def add_money(username: str, amount: float):
     db.commit()
     cursor.close()
     db.close()
+
+
+# def delete_event(eid: str):
+#
