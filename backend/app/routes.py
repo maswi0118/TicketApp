@@ -124,7 +124,7 @@ def add_event_province():
     from .forms import SelectProvince
     from .database import get_districts
     form = SelectProvince()
-    form.province = get_districts()
+    form.province.choices = get_districts()
     if form.validate_on_submit():
         return redirect(f'/add_event_city/{form.province.data}')
     return render_template('add_template.html', form=form)
@@ -153,7 +153,7 @@ def add_event(city):
     cid = get_cid(city)
     form = AddEventForm()
     form.location.choices = get_locations(cid)
-    form.artist = get_artists()
+    form.artist.choices = get_artists()
     if form.validate_on_submit():
         if add(form.name.data, form.date.data, form.price.data, form.location.data, form.artist.data):
             flash(f'Poprawnie dodano wydarzenie {form.name.data}')
