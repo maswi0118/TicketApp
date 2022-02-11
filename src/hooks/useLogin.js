@@ -20,18 +20,18 @@ export const useLogin = () => {
             setLoading(true);
 
             const success = await API.fetchLogin(username, password);
+            console.log(success)
 
             await setIsLogged(success);
 
-            console.log(success)
 
-            if (success == "True") {
+            if (success.response == "True") {
                 await localStorage.setItem("logged", "true");
-                await localStorage.setItem("username", username)
-                await alert("successfully signed in!")
+                await localStorage.setItem("username", username);
+                await alert("Signed in Successfully");
                 await window.location.reload();
             } else {
-                await alert("Wrong credentials")
+                await alert("Something went wrong");
             }
 
         } catch (error) {

@@ -226,7 +226,7 @@ def register(username, password, email, firstname, lastname, phone_number):
 @cross_origin()
 def login(username, password):
     from .database import login_user
-    return login_user(username, password)
+    return {"response": login_user(username, password)}
 
 
 @app.route('/ticket/<eid>/<username>', methods=['GET'])
