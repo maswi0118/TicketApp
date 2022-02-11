@@ -215,7 +215,7 @@ def get_all_events():
     return json.dumps(get_events())
 
 
-@app.route('/auth/register/<username>/<password>/<email>/<firstname>/<lastname>/<phone_number>', methods=['POST'])
+@app.route('/auth/register/<username>/<password>/<email>/<firstname>/<lastname>/<phone_number>', methods=['GET'])
 @cross_origin()
 def register(username, password, email, firstname, lastname, phone_number):
     from .database import add_user

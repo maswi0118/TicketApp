@@ -13,12 +13,7 @@ const MenuItems = [
         title: 'Profile',
         url: 'profile',
         cName: 'nav-links'
-    },
-    {
-        title: 'Admin Panel',
-        url: 'http://localhost:5000/admin_panel',
-        cName: 'nav-links'
-    },
+    }
 ]
 
 export default MenuItems

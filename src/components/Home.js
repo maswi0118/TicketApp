@@ -11,15 +11,15 @@ import SearchBar from "./SearchBar";
 import MoreButton from "./MoreButton"
 //Hook
 import { useHomeFetch } from "../hooks/useHomeFetch";
+import { usePurchase } from "../hooks/usePurchase";
 //Image
 import NoImage from '../images/noImage.png';
 
 const Home = () => {
     const { state, loading, error, setSearchTerm, setIsLoadingNext, setIsLoadingPrevious, pageNumber } = useHomeFetch();
-    const i = 0;
-
 
     console.log(state)
+    console.log(state.page.length)
 
     return(
         <>
@@ -43,10 +43,10 @@ const Home = () => {
                         date={event.date}
                         price={event.price}
                         genre={event.genre}
+                        eid={event.eid}
                     />
                 )) : null}
             </Grid>
-            <h4>Page: {pageNumber}</h4>
             {loading && <Spinner/>}
             {state.page.length > pageNumber + 1 && !loading && (
                 <MoreButton text={'Next Page'} callback={() => setIsLoadingNext(true)}/>

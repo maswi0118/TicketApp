@@ -7,5 +7,6 @@ bootstrap = Bootstrap(app)
 app.config['SECRET_KEY'] = '123'
 CORS(app)
 
+
 from . import routes
 

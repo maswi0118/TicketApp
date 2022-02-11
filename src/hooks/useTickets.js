@@ -6,28 +6,23 @@ const initialState = {
     page: []
 }
 
-export const useHomeFetch = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [state, setState] = useState(initialState);
+export const useTickets = () => {
+    const [isLoading, setIsLoading] = useState(false)
+    const [state, setState] = useState(initialState)
     const [loading, setLoading] = useState(false);
     const [error, setError] =useState(false);
     const [isLoadingNext, setIsLoadingNext] = useState(false)
     const [isLoadingPrevious, setIsLoadingPrevious] = useState(false)
     const [pageNumber, setPageNumber] = useState(0);
 
-
-    console.log(searchTerm)
-
-    const fetchEvents= async (searchTerm) => {
+    const fetchTickets = async () => {
         try {
             setError(false);
             setLoading(true);
 
-            const events = await API.fetchEvents(searchTerm);
+            const success = await API.fetchTickets();
 
-
-            setState(events)
-
+            await setState(success);
 
         } catch (error) {
             setError(true);
@@ -35,12 +30,10 @@ export const useHomeFetch = () => {
         setLoading(false);
     };
 
-    //Initial and search
-    useEffect(() => {
-        setState(initialState);
-        fetchEvents(searchTerm);
-    }, [searchTerm])
+    useEffect(()  => {
 
+        fetchTickets()
+    }, []);
     useEffect(() => {
         if (!isLoadingNext) return
         setPageNumber(pageNumber + 1)
@@ -53,5 +46,6 @@ export const useHomeFetch = () => {
         setIsLoadingPrevious(false)
     }, [isLoadingPrevious, pageNumber]);
 
-    return { state, loading, error, setSearchTerm, searchTerm, setIsLoadingNext, setIsLoadingPrevious, pageNumber };
+
+    return { state, setIsLoading };
 };
